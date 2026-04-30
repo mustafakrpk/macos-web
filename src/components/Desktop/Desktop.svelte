@@ -4,6 +4,7 @@
 	import Wallpaper from '../apps/WallpaperApp/Wallpaper.svelte';
 	import BootupScreen from './BootupScreen.svelte';
 	import ContextMenu from './ContextMenu.svelte';
+	import DesktopIcons from './DesktopIcons.svelte';
 	import SystemUpdate from './SystemUpdate.svelte';
 	import WindowsArea from './Window/WindowsArea.svelte';
 
@@ -25,6 +26,7 @@
 	<main>
 		<TopBar />
 		<WindowsArea />
+		<DesktopIcons />
 		<Dock />
 	</main>
 

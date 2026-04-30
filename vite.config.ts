@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import UnpluginIcons from 'unplugin-icons/vite';
 import { defineConfig } from 'vite';
@@ -23,10 +25,10 @@ export default defineConfig({
 				'**/*.mp3',
 			],
 			manifest: {
-				name: 'Mac OS Monterey Svelte Web',
-				short_name: 'macOS Svelte',
-				theme_color: '#ffffff',
-				description: 'Mac OS Monterey Web written in Svelte',
+				name: 'Mustafa Kırpık — Portfolyo',
+				short_name: 'Mustafa Kırpık',
+				theme_color: '#000000',
+				description: 'Mustafa Kırpık kişisel portfolyo sitesi — macOS masaüstü deneyimi.',
 				icons: [
 					{
 						src: 'app-icons/finder/128.png',
@@ -61,7 +63,7 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
-			'🍎': new URL('./src/', import.meta.url).pathname,
+			'🍎': fileURLToPath(new URL('./src/', import.meta.url)),
 		},
 	},
 	build: {

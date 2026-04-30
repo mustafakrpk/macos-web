@@ -27,8 +27,24 @@
 		<WallpaperSelector />
 	{/await}
 {:else if app_id === 'purus-twitter'}
-	{#await import('./PurusProfile/PurusProfile.svelte') then { default: PurusProfile }}
-		<PurusProfile />
+	{#await import('./About/About.svelte') then { default: About }}
+		<About />
+	{/await}
+{:else if app_id === 'appstore'}
+	{#await import('./Projects/Projects.svelte') then { default: Projects }}
+		<Projects />
+	{/await}
+{:else if app_id === 'notes'}
+	{#await import('./CV/CV.svelte') then { default: CV }}
+		<CV />
+	{/await}
+{:else if app_id === 'mail'}
+	{#await import('./Contact/Contact.svelte') then { default: Contact }}
+		<Contact />
+	{/await}
+{:else if app_id === 'safari'}
+	{#await import('./Social/Social.svelte') then { default: Social }}
+		<Social />
 	{/await}
 {:else}
 	{#await import('./AppStore/AppStore.svelte') then { default: AppStore }}

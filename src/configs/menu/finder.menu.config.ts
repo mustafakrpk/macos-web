@@ -2,35 +2,34 @@ import { create_menu_config } from '🍎/helpers/create-menu-config';
 
 export const finder_menu_config = create_menu_config({
 	default: {
-		title: 'Finder',
+		title: 'Mustafa Kırpık',
 		menu: {
-			'about-finder': {
-				title: 'About Finder',
+			'about-me': {
+				title: 'Hakkımda',
 				breakAfter: true,
 			},
-			preferences: {
-				title: 'Preferences',
+			projects: {
+				title: 'Projelerim',
+			},
+			cv: {
+				title: 'Özgeçmiş',
 				breakAfter: true,
 			},
-			'empty-trash': {
-				title: 'Empty Trash',
+			contact: {
+				title: 'İletişim',
 				breakAfter: true,
 			},
-			'hide-finder': {
-				title: 'Hide Finder',
+			github: {
+				title: 'GitHub',
 			},
-			'hide-others': {
-				title: 'Hide Others',
-			},
-			'show-all': {
-				title: 'Show All',
-				disabled: true,
+			linkedin: {
+				title: 'LinkedIn',
 			},
 		},
 	},
 
 	file: {
-		title: 'File',
+		title: 'Dosya',
 		menu: {
 			'new-finder-window': {
 				title: 'New Finder Window',
@@ -126,7 +125,7 @@ export const finder_menu_config = create_menu_config({
 	},
 
 	edit: {
-		title: 'Edit',
+		title: 'Düzen',
 		menu: {
 			undo: {
 				title: 'Undo',
@@ -171,7 +170,7 @@ export const finder_menu_config = create_menu_config({
 	},
 
 	view: {
-		title: 'View',
+		title: 'Görünüm',
 		menu: {
 			'as-icons': {
 				title: 'As Icons',
@@ -264,7 +263,7 @@ export const finder_menu_config = create_menu_config({
 	},
 
 	go: {
-		title: 'Go',
+		title: 'Git',
 		menu: {
 			back: {
 				title: 'Back',
@@ -324,7 +323,7 @@ export const finder_menu_config = create_menu_config({
 	},
 
 	window: {
-		title: 'Window',
+		title: 'Pencere',
 		menu: {
 			minimize: {
 				title: 'Minimize',
@@ -372,7 +371,7 @@ export const finder_menu_config = create_menu_config({
 	},
 
 	help: {
-		title: 'Help',
+		title: 'Yardım',
 		menu: {
 			'send-finder-feedback': {
 				title: 'Send Finder Feedback',
