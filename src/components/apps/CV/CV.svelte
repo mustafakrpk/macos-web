@@ -1,58 +1,41 @@
 <script lang="ts">
+	import { api, parse_string_array, type PublicAbout, type PublicCV } from '🍎/lib/api.ts';
 	import BriefcaseIcon from '~icons/mdi/briefcase-outline';
 	import SchoolIcon from '~icons/mdi/school-outline';
 	import StarIcon from '~icons/mdi/star-four-points-outline';
 	import LanguageIcon from '~icons/mdi/translate';
 	import DownloadIcon from '~icons/mdi/download';
 
-	type Experience = {
-		title: string;
-		company: string;
-		period: string;
-		description: string;
-	};
+	let cv = $state<PublicCV | null>(null);
+	let about_data = $state<PublicAbout | null>(null);
+	let loading = $state(true);
+	let error_msg = $state<string | null>(null);
 
-	type Education = {
-		degree: string;
-		school: string;
-		period: string;
-	};
+	$effect(() => {
+		Promise.all([
+			api.get<PublicCV>('/api/public/cv'),
+			api.get<{ about: PublicAbout | null }>('/api/public/about'),
+		])
+			.then(([cv_res, about_res]) => {
+				cv = {
+					...cv_res,
+					skill_categories: cv_res.skill_categories.map((s) => ({
+						...s,
+						items: parse_string_array(s.items),
+					})),
+				};
+				about_data = about_res.about;
+				loading = false;
+			})
+			.catch((err) => {
+				error_msg = err.message ?? 'Yüklenemedi';
+				loading = false;
+			});
+	});
 
-	const experiences: Experience[] = [
-		{
-			title: 'Yazılım Geliştirici',
-			company: 'Şirket Adı',
-			period: '2023 - Günümüz',
-			description:
-				'Modern web uygulamaları geliştirme, frontend mimarisi tasarımı ve performans optimizasyonu üzerine çalışmalar.',
-		},
-		{
-			title: 'Junior Developer',
-			company: 'Önceki Şirket',
-			period: '2021 - 2023',
-			description:
-				'React ve Node.js tabanlı projelerde aktif rol aldım. REST API tasarımı ve uygulaması.',
-		},
-	];
-
-	const education: Education[] = [
-		{
-			degree: 'Lisans — Bilgisayar Mühendisliği',
-			school: 'Üniversite Adı',
-			period: '2017 - 2021',
-		},
-	];
-
-	const skills = {
-		Frontend: ['Svelte', 'React', 'Vue', 'TypeScript', 'HTML/CSS', 'Tailwind'],
-		Backend: ['Node.js', 'Express', 'REST API', 'PostgreSQL', 'MongoDB'],
-		Araçlar: ['Git', 'Docker', 'Vite', 'Webpack', 'Linux', 'CI/CD'],
-	};
-
-	const languages = [
-		{ name: 'Türkçe', level: 'Anadil' },
-		{ name: 'İngilizce', level: 'İleri Düzey' },
-	];
+	function format_period(start: string, end: string | null): string {
+		return end ? `${start} - ${end}` : `${start} - Günümüz`;
+	}
 </script>
 
 <section class="container">
@@ -60,76 +43,92 @@
 		<span>Özgeçmiş</span>
 	</header>
 
-	<div class="page">
-		<div class="hero">
-			<h1>Mustafa Kırpık</h1>
-			<h2>Yazılım Geliştirici</h2>
-			<button class="download-btn">
-				<DownloadIcon /> PDF olarak indir
-			</button>
+	{#if loading}
+		<div class="state">Yükleniyor…</div>
+	{:else if error_msg}
+		<div class="state error">{error_msg}</div>
+	{:else if cv}
+		<div class="page">
+			<div class="hero">
+				<h1>{about_data?.full_name ?? 'Mustafa Kırpık'}</h1>
+				<h2>{about_data?.title ?? 'Yazılım Geliştirici'}</h2>
+				{#if cv.cv_meta?.pdf_url}
+					<a class="download-btn" href={cv.cv_meta.pdf_url} download>
+						<DownloadIcon /> PDF olarak indir
+					</a>
+				{/if}
+			</div>
+
+			{#if cv.experiences.length > 0}
+				<section class="block">
+					<h3><BriefcaseIcon /> Deneyim</h3>
+					<div class="timeline">
+						{#each cv.experiences as exp (exp.id)}
+							<article class="timeline-item">
+								<div class="dot"></div>
+								<div class="meta">
+									<div class="period">{format_period(exp.period_start, exp.period_end)}</div>
+									<h4>{exp.title}</h4>
+									<div class="company">{exp.company}</div>
+									{#if exp.description}<p>{exp.description}</p>{/if}
+								</div>
+							</article>
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			{#if cv.education.length > 0}
+				<section class="block">
+					<h3><SchoolIcon /> Eğitim</h3>
+					<div class="timeline">
+						{#each cv.education as edu (edu.id)}
+							<article class="timeline-item">
+								<div class="dot"></div>
+								<div class="meta">
+									<div class="period">{format_period(edu.period_start, edu.period_end)}</div>
+									<h4>{edu.degree}</h4>
+									<div class="company">{edu.school}</div>
+								</div>
+							</article>
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			{#if cv.skill_categories.length > 0}
+				<section class="block">
+					<h3><StarIcon /> Yetenekler</h3>
+					<div class="skills-grid">
+						{#each cv.skill_categories as cat (cat.id)}
+							<div class="skill-cat">
+								<h4>{cat.name}</h4>
+								<div class="tags">
+									{#each cat.items as tag}
+										<span class="tag">{tag}</span>
+									{/each}
+								</div>
+							</div>
+						{/each}
+					</div>
+				</section>
+			{/if}
+
+			{#if cv.languages.length > 0}
+				<section class="block">
+					<h3><LanguageIcon /> Diller</h3>
+					<div class="lang-list">
+						{#each cv.languages as lang (lang.id)}
+							<div class="lang-item">
+								<strong>{lang.name}</strong>
+								<span>{lang.level}</span>
+							</div>
+						{/each}
+					</div>
+				</section>
+			{/if}
 		</div>
-
-		<section class="block">
-			<h3><BriefcaseIcon /> Deneyim</h3>
-			<div class="timeline">
-				{#each experiences as exp}
-					<article class="timeline-item">
-						<div class="dot"></div>
-						<div class="meta">
-							<div class="period">{exp.period}</div>
-							<h4>{exp.title}</h4>
-							<div class="company">{exp.company}</div>
-							<p>{exp.description}</p>
-						</div>
-					</article>
-				{/each}
-			</div>
-		</section>
-
-		<section class="block">
-			<h3><SchoolIcon /> Eğitim</h3>
-			<div class="timeline">
-				{#each education as edu}
-					<article class="timeline-item">
-						<div class="dot"></div>
-						<div class="meta">
-							<div class="period">{edu.period}</div>
-							<h4>{edu.degree}</h4>
-							<div class="company">{edu.school}</div>
-						</div>
-					</article>
-				{/each}
-			</div>
-		</section>
-
-		<section class="block">
-			<h3><StarIcon /> Yetenekler</h3>
-			<div class="skills-grid">
-				{#each Object.entries(skills) as [category, items]}
-					<div class="skill-cat">
-						<h4>{category}</h4>
-						<div class="tags">
-							{#each items as tag}
-								<span class="tag">{tag}</span>
-							{/each}
-						</div>
-					</div>
-				{/each}
-			</div>
-		</section>
-
-		<section class="block">
-			<h3><LanguageIcon /> Diller</h3>
-			<div class="lang-list">
-				{#each languages as lang}
-					<div class="lang-item">
-						<strong>{lang.name}</strong>
-						<span>{lang.level}</span>
-					</div>
-				{/each}
-			</div>
-		</section>
-	</div>
+	{/if}
 </section>
 
 <style>
@@ -194,10 +193,21 @@
 		font-size: 0.9rem;
 		font-weight: 500;
 		cursor: pointer;
+		text-decoration: none;
 		transition: background-color 0.15s ease;
 
 		&:hover {
 			background-color: hsl(210, 100%, 45%);
+		}
+	}
+
+	.state {
+		padding: 3rem 2rem;
+		text-align: center;
+		color: hsla(var(--system-color-dark-hsl), 0.55);
+
+		&.error {
+			color: hsl(0, 70%, 50%);
 		}
 	}
 

@@ -1,55 +1,24 @@
 <script lang="ts">
+	import { api, parse_string_array, type PublicProject } from '🍎/lib/api.ts';
 	import GithubIcon from '~icons/mdi/github';
 	import LinkIcon from '~icons/mdi/open-in-new';
 
-	type Project = {
-		title: string;
-		description: string;
-		stack: string[];
-		github?: string;
-		live?: string;
-		gradient: string;
-		emoji: string;
-	};
+	let projects = $state<PublicProject[]>([]);
+	let loading = $state(true);
+	let error_msg = $state<string | null>(null);
 
-	const projects: Project[] = [
-		{
-			title: 'Kişisel Portfolyo',
-			description:
-				'macOS masaüstü deneyimi sunan kişisel portfolyo sitesi. Svelte 5 runes, TypeScript ve Vite kullanılarak geliştirildi.',
-			stack: ['Svelte 5', 'TypeScript', 'Vite', 'PWA'],
-			github: 'https://github.com/mustafakrpk',
-			gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-			emoji: '🍎',
-		},
-		{
-			title: 'Proje 2',
-			description:
-				'Açıklama buraya gelecek. Bu kart için kendi proje bilgilerini doldurabilirsin.',
-			stack: ['React', 'Node.js', 'PostgreSQL'],
-			github: 'https://github.com/mustafakrpk',
-			gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-			emoji: '🚀',
-		},
-		{
-			title: 'Proje 3',
-			description:
-				'Açıklama buraya gelecek. Bu kart için kendi proje bilgilerini doldurabilirsin.',
-			stack: ['Next.js', 'Tailwind', 'Prisma'],
-			github: 'https://github.com/mustafakrpk',
-			gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-			emoji: '⚡',
-		},
-		{
-			title: 'Proje 4',
-			description:
-				'Açıklama buraya gelecek. Bu kart için kendi proje bilgilerini doldurabilirsin.',
-			stack: ['Vue 3', 'Pinia', 'Supabase'],
-			github: 'https://github.com/mustafakrpk',
-			gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-			emoji: '🌱',
-		},
-	];
+	$effect(() => {
+		api
+			.get<{ projects: PublicProject[] }>('/api/public/projects')
+			.then((res) => {
+				projects = res.projects.map((p) => ({ ...p, stack: parse_string_array(p.stack) }));
+				loading = false;
+			})
+			.catch((err) => {
+				error_msg = err.message ?? 'Yüklenemedi';
+				loading = false;
+			});
+	});
 
 	function external(node: HTMLAnchorElement) {
 		node.rel = 'noopener noreferrer';
@@ -67,32 +36,44 @@
 		<p>Üzerinde çalıştığım ve katkı sağladığım bazı projeler.</p>
 	</div>
 
-	<div class="grid">
-		{#each projects as project}
-			<article class="card">
-				<div class="cover" style:background={project.gradient}>
-					<span class="emoji">{project.emoji}</span>
-				</div>
-				<div class="body">
-					<h2>{project.title}</h2>
-					<p>{project.description}</p>
-					<div class="stack">
-						{#each project.stack as tech}
-							<span class="tag">{tech}</span>
-						{/each}
+	{#if loading}
+		<div class="state">Yükleniyor…</div>
+	{:else if error_msg}
+		<div class="state error">{error_msg}</div>
+	{:else if projects.length === 0}
+		<div class="state">Henüz proje eklenmemiş.</div>
+	{:else}
+		<div class="grid">
+			{#each projects as project (project.id)}
+				<article class="card">
+					{#if project.image_url}
+						<div class="cover cover-img" style:background-image={`url(${project.image_url})`}></div>
+					{:else}
+						<div class="cover" style:background={project.gradient}>
+							<span class="emoji">{project.emoji}</span>
+						</div>
+					{/if}
+					<div class="body">
+						<h2>{project.title}</h2>
+						<p>{project.description}</p>
+						<div class="stack">
+							{#each project.stack as tech}
+								<span class="tag">{tech}</span>
+							{/each}
+						</div>
+						<div class="actions">
+							{#if project.github_url}
+								<a href={project.github_url} use:external><GithubIcon /> GitHub</a>
+							{/if}
+							{#if project.live_url}
+								<a href={project.live_url} use:external><LinkIcon /> Canlı</a>
+							{/if}
+						</div>
 					</div>
-					<div class="actions">
-						{#if project.github}
-							<a href={project.github} use:external><GithubIcon /> GitHub</a>
-						{/if}
-						{#if project.live}
-							<a href={project.live} use:external><LinkIcon /> Canlı</a>
-						{/if}
-					</div>
-				</div>
-			</article>
-		{/each}
-	</div>
+				</article>
+			{/each}
+		</div>
+	{/if}
 </section>
 
 <style>
@@ -165,10 +146,22 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		background-size: cover;
+		background-position: center;
 
 		.emoji {
 			font-size: 3rem;
 			filter: drop-shadow(0 4px 8px hsla(0, 0%, 0%, 0.2));
+		}
+	}
+
+	.state {
+		padding: 3rem 2rem;
+		text-align: center;
+		color: hsla(var(--system-color-dark-hsl), 0.55);
+
+		&.error {
+			color: hsl(0, 70%, 50%);
 		}
 	}
 

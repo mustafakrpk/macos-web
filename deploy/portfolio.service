@@ -1,0 +1,32 @@
+[Unit]
+Description=Mustafa Kirpik Portfolio API (Hono + Drizzle + MySQL)
+After=network.target mysql.service
+Requires=mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/portfolio/server
+EnvironmentFile=/var/www/portfolio/server/.env
+
+# tsx ile çalıştırma (build sonrası yerine direkt TypeScript)
+# Alternatif: önce `pnpm build` çalıştırıp `node dist/index.js` kullan.
+ExecStart=/usr/bin/node --env-file=/var/www/portfolio/server/.env --import tsx/esm /var/www/portfolio/server/src/index.ts
+
+Restart=on-failure
+RestartSec=5
+
+# Loglar journalctl'e
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=portfolio
+
+# Sertleştirme
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

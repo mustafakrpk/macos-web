@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { api, type PublicAbout } from '🍎/lib/api.ts';
 	import EmailIcon from '~icons/mdi/email-outline';
 	import GithubIcon from '~icons/mdi/github';
 	import LinkedinIcon from '~icons/mdi/linkedin';
@@ -8,14 +9,36 @@
 	let name = $state('');
 	let email = $state('');
 	let message = $state('');
+	let submitting = $state(false);
+	let status = $state<'idle' | 'success' | 'error'>('idle');
+	let status_msg = $state<string>('');
 
-	function handle_submit(e: Event) {
+	let about_data = $state<PublicAbout | null>(null);
+
+	$effect(() => {
+		api
+			.get<{ about: PublicAbout | null }>('/api/public/about')
+			.then((res) => (about_data = res.about))
+			.catch(() => {});
+	});
+
+	async function handle_submit(e: Event) {
 		e.preventDefault();
-		const subject = encodeURIComponent(`İletişim — ${name || 'Anonim'}`);
-		const body = encodeURIComponent(
-			`Ad: ${name}\nE-posta: ${email}\n\n${message}`,
-		);
-		window.location.href = `mailto:e.turgut@erkpa.com.tr?subject=${subject}&body=${body}`;
+		if (submitting) return;
+		submitting = true;
+		status = 'idle';
+
+		try {
+			await api.post('/api/public/contact', { name, email, message });
+			status = 'success';
+			status_msg = 'Mesajın gönderildi, teşekkürler!';
+			name = email = message = '';
+		} catch (err: any) {
+			status = 'error';
+			status_msg = err.message ?? 'Gönderilemedi';
+		} finally {
+			submitting = false;
+		}
 	}
 
 	function external(node: HTMLAnchorElement) {
@@ -35,14 +58,22 @@
 			<p>Birlikte çalışmak, sohbet etmek veya proje önerilerin için iletişime geçebilirsin.</p>
 
 			<div class="links">
-				<a href="mailto:e.turgut@erkpa.com.tr"><EmailIcon /> e.turgut@erkpa.com.tr</a>
-				<a href="https://github.com/mustafakrpk" use:external>
-					<GithubIcon /> github.com/mustafakrpk
-				</a>
-				<a href="https://www.linkedin.com/in/krpkmustafa/" use:external>
-					<LinkedinIcon /> linkedin.com/in/krpkmustafa
-				</a>
-				<div class="info"><LocationIcon /> Türkiye</div>
+				{#if about_data?.email}
+					<a href={`mailto:${about_data.email}`}><EmailIcon /> {about_data.email}</a>
+				{/if}
+				{#if about_data?.github_url}
+					<a href={about_data.github_url} use:external>
+						<GithubIcon /> {about_data.github_url.replace(/^https?:\/\//, '')}
+					</a>
+				{/if}
+				{#if about_data?.linkedin_url}
+					<a href={about_data.linkedin_url} use:external>
+						<LinkedinIcon /> {about_data.linkedin_url.replace(/^https?:\/\//, '')}
+					</a>
+				{/if}
+				{#if about_data?.location}
+					<div class="info"><LocationIcon /> {about_data.location}</div>
+				{/if}
 			</div>
 		</aside>
 
@@ -63,7 +94,16 @@
 				></textarea>
 			</label>
 
-			<button type="submit"><SendIcon /> Gönder</button>
+			<button type="submit" disabled={submitting}>
+				<SendIcon />
+				{submitting ? 'Gönderiliyor…' : 'Gönder'}
+			</button>
+
+			{#if status === 'success'}
+				<div class="status success">{status_msg}</div>
+			{:else if status === 'error'}
+				<div class="status error">{status_msg}</div>
+			{/if}
 		</form>
 	</div>
 </section>
@@ -205,6 +245,28 @@
 
 		&:hover {
 			background-color: hsl(210, 100%, 45%);
+		}
+
+		&:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+	}
+
+	.status {
+		margin-top: 0.5rem;
+		padding: 0.6rem 0.8rem;
+		border-radius: 0.4rem;
+		font-size: 0.85rem;
+
+		&.success {
+			background-color: hsla(140, 60%, 50%, 0.15);
+			color: hsl(140, 60%, 30%);
+		}
+
+		&.error {
+			background-color: hsla(0, 70%, 50%, 0.12);
+			color: hsl(0, 70%, 45%);
 		}
 	}
 </style>

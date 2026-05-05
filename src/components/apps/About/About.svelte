@@ -1,10 +1,49 @@
 <script lang="ts">
 	import { preferences } from '🍎/state/preferences.svelte.ts';
+	import { api, type PublicAbout } from '🍎/lib/api.ts';
 	import GithubIcon from '~icons/mdi/github';
 	import LinkedinIcon from '~icons/mdi/linkedin';
 	import EmailIcon from '~icons/mdi/email-outline';
 	import LocationIcon from '~icons/mdi/map-marker-outline';
 	import CodeIcon from '~icons/mdi/code-tags';
+
+	let data = $state<PublicAbout | null>(null);
+	let loading = $state(true);
+	let error_msg = $state<string | null>(null);
+
+	$effect(() => {
+		api
+			.get<{ about: PublicAbout | null }>('/api/public/about')
+			.then((res) => {
+				data = res.about;
+				loading = false;
+			})
+			.catch((err) => {
+				error_msg = err.message ?? 'Yüklenemedi';
+				loading = false;
+			});
+	});
+
+	const initials = $derived(
+		data?.full_name
+			?.split(' ')
+			.map((p) => p[0])
+			.join('')
+			.slice(0, 2)
+			.toUpperCase() ?? 'MK',
+	);
+
+	const paragraphs = $derived(
+		(data?.intro_md ?? '')
+			.split(/\n{2,}/)
+			.map((p) => p.trim())
+			.filter(Boolean),
+	);
+
+	function format_md(s: string): string {
+		// Sadece **bold** desteği — düz textarea + minimal formatlama
+		return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+	}
 
 	function external(node: HTMLAnchorElement) {
 		node.rel = 'noopener noreferrer';
@@ -19,43 +58,47 @@
 
 	<aside class:light={preferences.theme.scheme === 'light'}>
 		<nav>
-			<a href="https://github.com/mustafakrpk" use:external> <GithubIcon /> GitHub </a>
-			<a href="https://www.linkedin.com/in/krpkmustafa/" use:external>
-				<LinkedinIcon /> LinkedIn
-			</a>
-			<a href="mailto:e.turgut@erkpa.com.tr" use:external> <EmailIcon /> E-posta </a>
+			{#if data?.github_url}
+				<a href={data.github_url} use:external> <GithubIcon /> GitHub </a>
+			{/if}
+			{#if data?.linkedin_url}
+				<a href={data.linkedin_url} use:external> <LinkedinIcon /> LinkedIn </a>
+			{/if}
+			{#if data?.email}
+				<a href={`mailto:${data.email}`} use:external> <EmailIcon /> E-posta </a>
+			{/if}
 
 			<hr />
 
-			<div class="info-row"><LocationIcon /> Türkiye</div>
-			<div class="info-row"><CodeIcon /> Yazılım Geliştirici</div>
+			{#if data?.location}
+				<div class="info-row"><LocationIcon /> {data.location}</div>
+			{/if}
+			{#if data?.title}
+				<div class="info-row"><CodeIcon /> {data.title}</div>
+			{/if}
 		</nav>
 	</aside>
 
 	<section class="content">
-		<div class="avatar">MK</div>
+		{#if loading}
+			<div class="state">Yükleniyor…</div>
+		{:else if error_msg}
+			<div class="state error">{error_msg}</div>
+		{:else if data}
+			{#if data.avatar_url}
+				<img class="avatar avatar-img" src={data.avatar_url} alt={data.full_name} />
+			{:else}
+				<div class="avatar">{initials}</div>
+			{/if}
 
-		<h1>Merhaba, ben Mustafa 👋</h1>
+			<h1>Merhaba, ben {data.full_name.split(' ')[0]} 👋</h1>
 
-		<h2>Yazılım geliştirici</h2>
+			<h2>{data.title}</h2>
 
-		<p>
-			Modern web teknolojileriyle kullanıcı dostu, performanslı ve estetik arayüzler geliştiriyorum.
-			Frontend tarafında <strong>Svelte</strong>, <strong>React</strong> ve <strong>TypeScript</strong>
-			ile çalışmayı seviyorum.
-		</p>
-
-		<p>
-			Backend tarafında <strong>Node.js</strong> ile API'ler yazıyor, veritabanı tasarımı ve
-			DevOps süreçleriyle ilgileniyorum. Yeni teknolojileri öğrenip projelerime entegre etmek
-			beni heyecanlandırıyor.
-		</p>
-
-		<p>
-			Bu site, klasik bir portfolyo yerine sana <strong>macOS masaüstü deneyimi</strong>
-			yaşatıyor. Dock'tan veya masaüstündeki klasörlerden istediğin uygulamayı açabilir,
-			projelerime ve özgeçmişime göz atabilirsin.
-		</p>
+			{#each paragraphs as para}
+				<p>{@html format_md(para)}</p>
+			{/each}
+		{/if}
 	</section>
 </section>
 
@@ -200,6 +243,20 @@
 		letter-spacing: 0.05em;
 		margin-bottom: 1.2rem;
 		box-shadow: 0 8px 24px hsla(0, 0%, 0%, 0.15);
+	}
+
+	.avatar-img {
+		object-fit: cover;
+		background: none;
+	}
+
+	.state {
+		padding: 2rem;
+		color: hsla(var(--system-color-dark-hsl), 0.6);
+
+		&.error {
+			color: hsl(0, 70%, 50%);
+		}
 	}
 
 	h1 {

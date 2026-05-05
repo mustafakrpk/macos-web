@@ -1,0 +1,64 @@
+# /etc/nginx/sites-available/portfolio
+# (sembolik link: /etc/nginx/sites-enabled/portfolio)
+# DOMAIN, /var/www/portfolio yolları ortamına göre değiştir.
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name senin-domain.com www.senin-domain.com;
+
+    # certbot HTTPS'e yönlendirecek; manuel:
+    # return 301 https://$host$request_uri;
+
+    root /var/www/portfolio/dist;
+    index index.html;
+
+    # API → Node backend
+    location /api/ {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # File upload boyutu
+        client_max_body_size 10M;
+    }
+
+    # Yüklenen dosyalar — direkt diskten servis
+    location /uploads/ {
+        alias /var/www/portfolio/uploads/;
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # Static assets (vite hash'li dosyalar)
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # Service worker — kısa cache
+    location = /sw.js {
+        add_header Cache-Control "no-cache";
+    }
+
+    # PWA manifest, ikonlar
+    location ~* \.(webp|png|jpg|jpeg|svg|ico|woff2?)$ {
+        expires 7d;
+        add_header Cache-Control "public";
+    }
+
+    # SPA fallback — tüm rotalar index.html'e
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Güvenlik header'ları
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+}
