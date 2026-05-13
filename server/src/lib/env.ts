@@ -18,6 +18,17 @@ const env_schema = z.object({
 	UPLOAD_DIR: z.string().default('./uploads'),
 	UPLOAD_PUBLIC_URL: z.string().default('/uploads'),
 	MAX_UPLOAD_MB: z.coerce.number().int().positive().default(5),
+
+	SMTP_HOST: z.string().default(''),
+	SMTP_PORT: z.coerce.number().int().positive().default(587),
+	SMTP_SECURE: z
+		.string()
+		.optional()
+		.transform((v) => v === 'true' || v === '1'),
+	SMTP_USER: z.string().default(''),
+	SMTP_PASS: z.string().default(''),
+	SMTP_FROM: z.string().default(''),
+	NOTIFY_EMAIL: z.string().email().optional(),
 });
 
 const parsed = env_schema.safeParse(process.env);

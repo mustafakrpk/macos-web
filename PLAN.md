@@ -6,6 +6,31 @@
 
 ## npx pnpm@10.12.3 dev
 
+İki ayrı terminal aç:
+
+🖥️ Terminal 1 — Backend
+
+cd C:\Users\MUSTAFA KIRPIK\Documents\GitHub\macos-web\server
+npx pnpm@10.12.3 dev
+Görmen gereken: ✓ Server ready: http://localhost:3000
+
+🖥️ Terminal 2 — Frontend
+
+cd C:\Users\MUSTAFA KIRPIK\Documents\GitHub\macos-web
+npx pnpm@10.12.3 dev
+Görmen gereken: Local: http://localhost:5173/
+
+🌐 Erişim adresleri
+Ne URL
+Site (mac arayüzü) http://localhost:5173
+Admin paneli http://localhost:5173/admin
+API health check http://localhost:3000/api/ping
+🛑 Durdurma
+Her iki terminalde Ctrl+C → Y (Toplu işi sonlandır?).
+
+⚠️ Önce MySQL servisinin çalışıyor olması gerekiyor. Çalışmıyorsa: services.msc → MySQL servisini başlat.
+
+İlk açılışta veya seed'i yenilemek istersen (sıfırdan): cd server → npx pnpm@10.12.3 db:seed
 npx pnpm@10.12.3 dev
 
 ## 1. Teknoloji Yığını (sabit)

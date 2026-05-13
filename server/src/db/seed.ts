@@ -31,7 +31,7 @@ await db.insert(about).values({
 	intro_md:
 		"Modern web teknolojileriyle kullanıcı dostu, performanslı ve estetik arayüzler geliştiriyorum. Frontend tarafında **Svelte**, **React** ve **TypeScript** ile çalışmayı seviyorum.\n\nBackend tarafında **Node.js** ile API'ler yazıyor, veritabanı tasarımı ve DevOps süreçleriyle ilgileniyorum.",
 	avatar_url: null,
-	email: 'e.turgut@erkpa.com.tr',
+	email: 'muskirp42@gmail.com',
 	github_url: 'https://github.com/mustafakrpk',
 	linkedin_url: 'https://www.linkedin.com/in/krpkmustafa/',
 	location: 'Türkiye',

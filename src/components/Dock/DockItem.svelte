@@ -29,6 +29,7 @@
 	import { spring, tweened } from 'svelte/motion';
 	import { elevation } from '🍎/actions';
 	import { apps_config } from '🍎/configs/apps/apps-config.ts';
+	import { track } from '🍎/lib/api.ts';
 	import { apps, type AppID } from '🍎/state/apps.svelte.ts';
 	import { preferences } from '🍎/state/preferences.svelte.ts';
 
@@ -106,6 +107,8 @@
 	}
 
 	async function openApp(e: MouseEvent) {
+		track('app_open', { app_id });
+
 		if (!shouldOpenWindow) return externalAction?.(e);
 
 		// For the bounce animation

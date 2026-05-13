@@ -8,6 +8,8 @@ const z_index_config = {
 	'system-updates-available': 60,
 	'system-dialog': 90,
 	'menubar-menu-parent': 160,
+	'install-prompt': 120,
+	spotlight: 150,
 };
 
 for (const [element, zIndexValue] of Object.entries(z_index_config)) {

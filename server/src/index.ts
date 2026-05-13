@@ -6,7 +6,12 @@ import { secureHeaders } from 'hono/secure-headers';
 import { env, is_production } from './lib/env.js';
 import { rate_limit } from './middleware/rate-limit.js';
 import { admin_routes } from './routes/admin.js';
+import {
+	admin_analytics_routes,
+	public_event_routes,
+} from './routes/analytics.js';
 import { auth_routes } from './routes/auth.js';
+import { github_routes } from './routes/github.js';
 import { public_routes } from './routes/public.js';
 import { upload_routes } from './routes/uploads.js';
 
@@ -50,7 +55,10 @@ app.get('/api/ping', (c) =>
 
 app.route('/api/auth', auth_routes);
 app.route('/api/public', public_routes);
+app.route('/api/public', public_event_routes);
+app.route('/api/public/github', github_routes);
 app.route('/api/admin', admin_routes);
+app.route('/api/admin/analytics', admin_analytics_routes);
 app.route('/api/admin/uploads', upload_routes);
 
 app.notFound((c) => c.json({ error: 'not_found' }, 404));

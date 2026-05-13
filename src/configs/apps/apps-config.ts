@@ -55,6 +55,22 @@ const vscode = create_app_config({
 	width: 900,
 });
 
+const terminal = create_app_config({
+	title: 'Terminal',
+	resizable: true,
+
+	height: 500,
+	width: 750,
+});
+
+const blog = create_app_config({
+	title: 'Blog & Notlar',
+	resizable: true,
+
+	height: 600,
+	width: 950,
+});
+
 const calendar = create_app_config({
 	title: 'Takvim',
 	resizable: true,
@@ -106,6 +122,8 @@ export const apps_config = {
 	mail: contact,
 	safari: social,
 	vscode,
+	terminal,
+	messages: blog,
 	calendar,
 	calculator,
 	wallpapers,

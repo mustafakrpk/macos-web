@@ -18,6 +18,14 @@
 	{#await import('./VSCode/VSCode.svelte') then { default: VSCode }}
 		<VSCode {is_being_dragged} />
 	{/await}
+{:else if app_id === 'terminal'}
+	{#await import('./Terminal/Terminal.svelte') then { default: Terminal }}
+		<Terminal />
+	{/await}
+{:else if app_id === 'messages'}
+	{#await import('./Blog/Blog.svelte') then { default: Blog }}
+		<Blog />
+	{/await}
 {:else if app_id === 'calculator'}
 	{#await import('./Calculator/Calculator.svelte') then { default: Calculator }}
 		<Calculator />

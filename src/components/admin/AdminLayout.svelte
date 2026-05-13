@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import HomeIcon from '~icons/mdi/view-dashboard-outline';
+	import AnalyticsIcon from '~icons/mdi/chart-line';
 	import AboutIcon from '~icons/mdi/account-outline';
 	import ProjectsIcon from '~icons/mdi/folder-multiple-outline';
 	import CVIcon from '~icons/mdi/file-document-outline';
+	import BlogIcon from '~icons/mdi/post-outline';
 	import MessagesIcon from '~icons/mdi/email-outline';
 	import LogoutIcon from '~icons/mdi/logout';
 	import OpenIcon from '~icons/mdi/open-in-new';
@@ -26,9 +28,11 @@
 
 	const items = [
 		{ to: '/admin', label: 'Genel Bakış', icon: HomeIcon, exact: true },
+		{ to: '/admin/analytics', label: 'İstatistikler', icon: AnalyticsIcon },
 		{ to: '/admin/about', label: 'Hakkımda', icon: AboutIcon },
 		{ to: '/admin/projects', label: 'Projeler', icon: ProjectsIcon },
 		{ to: '/admin/cv', label: 'Özgeçmiş', icon: CVIcon },
+		{ to: '/admin/blog', label: 'Blog', icon: BlogIcon },
 		{ to: '/admin/messages', label: 'Mesajlar', icon: MessagesIcon },
 	];
 

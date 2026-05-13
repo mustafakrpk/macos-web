@@ -1,0 +1,1 @@
+ALTER TABLE `about` ADD `current_status` varchar(255);

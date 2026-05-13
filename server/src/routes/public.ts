@@ -1,4 +1,4 @@
-import { asc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { db } from '../db/client.js';
@@ -9,9 +9,11 @@ import {
 	education,
 	experiences,
 	languages,
+	posts,
 	projects,
 	skill_categories,
 } from '../db/schema.js';
+import { notify_new_message } from '../lib/mailer.js';
 
 const contact_schema = z.object({
 	name: z.string().trim().min(1).max(255),
@@ -57,6 +59,32 @@ public_routes.get('/cv', async (c) => {
 	});
 });
 
+public_routes.get('/posts', async (c) => {
+	const rows = await db
+		.select({
+			id: posts.id,
+			slug: posts.slug,
+			title: posts.title,
+			excerpt: posts.excerpt,
+			published_at: posts.published_at,
+		})
+		.from(posts)
+		.where(eq(posts.is_published, true))
+		.orderBy(desc(posts.published_at));
+	return c.json({ posts: rows });
+});
+
+public_routes.get('/posts/:slug', async (c) => {
+	const slug = c.req.param('slug');
+	const rows = await db
+		.select()
+		.from(posts)
+		.where(and(eq(posts.slug, slug), eq(posts.is_published, true)))
+		.limit(1);
+	if (rows.length === 0) return c.json({ error: 'not_found' }, 404);
+	return c.json({ post: rows[0] });
+});
+
 public_routes.post('/contact', async (c) => {
 	const body = await c.req.json().catch(() => null);
 	const parsed = contact_schema.safeParse(body);
@@ -75,6 +103,14 @@ public_routes.post('/contact', async (c) => {
 		message: parsed.data.message,
 		ip: ip ?? undefined,
 	});
+
+	// Bildirim e-postası gönder (async, isteğin cevabını engellememeli)
+	notify_new_message({
+		name: parsed.data.name,
+		email: parsed.data.email,
+		message: parsed.data.message,
+		ip,
+	}).catch((err) => console.error('[contact] notify failed', err));
 
 	return c.json({ ok: true });
 });

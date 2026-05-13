@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { preferences } from '🍎/state/preferences.svelte.ts';
-	import { api, type PublicAbout } from '🍎/lib/api.ts';
+	import { api, type GithubStats, type PublicAbout } from '🍎/lib/api.ts';
 	import GithubIcon from '~icons/mdi/github';
 	import LinkedinIcon from '~icons/mdi/linkedin';
 	import EmailIcon from '~icons/mdi/email-outline';
 	import LocationIcon from '~icons/mdi/map-marker-outline';
 	import CodeIcon from '~icons/mdi/code-tags';
+	import StarIcon from '~icons/mdi/star';
+	import RepoIcon from '~icons/mdi/source-branch';
+	import UsersIcon from '~icons/mdi/account-group-outline';
 
 	let data = $state<PublicAbout | null>(null);
+	let gh_stats = $state<GithubStats | null>(null);
 	let loading = $state(true);
 	let error_msg = $state<string | null>(null);
 
@@ -22,6 +26,12 @@
 				error_msg = err.message ?? 'Yüklenemedi';
 				loading = false;
 			});
+
+		// GitHub stats arka planda — başarısız olursa sessizce atla
+		api
+			.get<{ stats: GithubStats }>('/api/public/github/stats')
+			.then((res) => (gh_stats = res.stats))
+			.catch(() => {});
 	});
 
 	const initials = $derived(
@@ -95,9 +105,45 @@
 
 			<h2>{data.title}</h2>
 
+			{#if data.current_status}
+				<div class="status-banner">
+					<span class="dot"></span>
+					<span>{data.current_status}</span>
+				</div>
+			{/if}
+
 			{#each paragraphs as para}
 				<p>{@html format_md(para)}</p>
 			{/each}
+
+			{#if gh_stats}
+				<div class="gh-card">
+					<div class="gh-header">
+						<GithubIcon />
+						<a href={`https://github.com/${gh_stats.username}`} use:external>
+							@{gh_stats.username}
+						</a>
+					</div>
+					<div class="gh-stats">
+						<div><RepoIcon /> {gh_stats.public_repos} repo</div>
+						<div><UsersIcon /> {gh_stats.followers} takipçi</div>
+					</div>
+					{#if gh_stats.top_repos.length > 0}
+						<div class="gh-repos">
+							{#each gh_stats.top_repos.slice(0, 3) as repo}
+								<a href={repo.url} use:external class="gh-repo">
+									<strong>{repo.name}</strong>
+									{#if repo.description}<span>{repo.description}</span>{/if}
+									<div class="gh-repo-meta">
+										{#if repo.language}<span class="lang">{repo.language}</span>{/if}
+										<span><StarIcon /> {repo.stars}</span>
+									</div>
+								</a>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			{/if}
 		{/if}
 	</section>
 </section>
@@ -259,6 +305,99 @@
 		}
 	}
 
+	.gh-card {
+		width: 100%;
+		max-width: 32rem;
+		margin-top: 1.5rem;
+		padding: 1.2rem 1.3rem;
+		border: 1px solid hsla(var(--system-color-dark-hsl), 0.1);
+		border-radius: 0.7rem;
+		background: hsla(var(--system-color-dark-hsl), 0.03);
+	}
+
+	.gh-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.8rem;
+		font-size: 0.95rem;
+
+		a {
+			color: hsla(var(--system-color-dark-hsl), 0.9);
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+		a:hover {
+			color: hsl(232, 75%, 55%);
+		}
+	}
+
+	.gh-stats {
+		display: flex;
+		gap: 1rem;
+		font-size: 0.85rem;
+		color: hsla(var(--system-color-dark-hsl), 0.7);
+		margin-bottom: 1rem;
+
+		div {
+			display: flex;
+			align-items: center;
+			gap: 0.3rem;
+		}
+	}
+
+	.gh-repos {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.gh-repo {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 0.6rem 0.8rem;
+		background: white;
+		border: 1px solid hsla(var(--system-color-dark-hsl), 0.08);
+		border-radius: 0.4rem;
+		text-decoration: none;
+		color: inherit;
+		font-size: 0.85rem;
+		transition: border-color 0.1s;
+
+		&:hover {
+			border-color: hsl(232, 75%, 65%);
+		}
+
+		strong {
+			font-weight: 500;
+			color: hsl(232, 75%, 55%);
+		}
+
+		span {
+			color: hsla(var(--system-color-dark-hsl), 0.65);
+			font-size: 0.78rem;
+		}
+	}
+
+	.gh-repo-meta {
+		display: flex;
+		gap: 0.7rem;
+		margin-top: 0.2rem;
+
+		span {
+			display: flex;
+			align-items: center;
+			gap: 0.2rem;
+			font-size: 0.75rem;
+		}
+
+		.lang {
+			color: hsla(var(--system-color-dark-hsl), 0.55);
+		}
+	}
+
 	h1 {
 		font-size: 2.2rem;
 		line-height: 1.2;
@@ -271,6 +410,32 @@
 		font-weight: 400;
 		color: hsla(var(--system-color-dark-hsl), 0.65);
 		margin: 0 0 1.5rem 0;
+	}
+
+	.status-banner {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.45rem 0.9rem;
+		margin: 0 0 1.5rem 0;
+		background: hsla(140, 60%, 50%, 0.12);
+		border-radius: 999px;
+		font-size: 0.82rem;
+		color: hsl(140, 50%, 30%);
+	}
+
+	.status-banner .dot {
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: hsl(140, 70%, 45%);
+		box-shadow: 0 0 0 3px hsla(140, 70%, 45%, 0.2);
+		animation: pulse 2s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% { opacity: 1; }
+		50% { opacity: 0.55; }
 	}
 
 	p {

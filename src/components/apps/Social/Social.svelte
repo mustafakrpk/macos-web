@@ -21,8 +21,8 @@
 		},
 		{
 			name: 'E-posta',
-			handle: 'e.turgut@erkpa.com.tr',
-			url: 'mailto:e.turgut@erkpa.com.tr',
+			handle: 'muskirp42@gmail.com',
+			url: 'mailto:muskirp42@gmail.com',
 			color: '#ea4335',
 			icon: EmailIcon,
 		},

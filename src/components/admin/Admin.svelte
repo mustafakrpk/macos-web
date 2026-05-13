@@ -8,6 +8,8 @@
 	import AboutAdmin from './AboutAdmin.svelte';
 	import ProjectsAdmin from './ProjectsAdmin.svelte';
 	import CVAdmin from './CVAdmin.svelte';
+	import BlogAdmin from './BlogAdmin.svelte';
+	import AnalyticsAdmin from './AnalyticsAdmin.svelte';
 	import MessagesAdmin from './MessagesAdmin.svelte';
 
 	type Me = { id: number; username: string; avatar_url: string | null };
@@ -55,12 +57,16 @@
 	<AdminLayout user={me} {path} on_logout={logout} on_navigate={navigate}>
 		{#if path === '/admin' || path === '/admin/'}
 			<Dashboard {navigate} />
+		{:else if path.startsWith('/admin/analytics')}
+			<AnalyticsAdmin />
 		{:else if path.startsWith('/admin/about')}
 			<AboutAdmin />
 		{:else if path.startsWith('/admin/projects')}
 			<ProjectsAdmin />
 		{:else if path.startsWith('/admin/cv')}
 			<CVAdmin />
+		{:else if path.startsWith('/admin/blog')}
+			<BlogAdmin />
 		{:else if path.startsWith('/admin/messages')}
 			<MessagesAdmin />
 		{:else}

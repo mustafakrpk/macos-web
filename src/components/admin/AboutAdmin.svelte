@@ -12,6 +12,7 @@
 		github_url: null as string | null,
 		linkedin_url: null as string | null,
 		location: null as string | null,
+		current_status: null as string | null,
 	});
 
 	let loading = $state(true);
@@ -33,6 +34,7 @@
 						github_url: res.about.github_url,
 						linkedin_url: res.about.linkedin_url,
 						location: res.about.location,
+						current_status: res.about.current_status,
 					};
 				}
 				loading = false;
@@ -74,6 +76,19 @@
 					<input type="text" bind:value={form.title} required maxlength="255" />
 				</label>
 			</div>
+
+			<label>
+				Şu an üzerinde çalıştığım
+				<input
+					type="text"
+					bind:value={form.current_status}
+					maxlength="255"
+					placeholder="Örn: AI tabanlı bir öneri motoru geliştiriyorum"
+				/>
+				<span class="helper">
+					Boş bırakırsan banner gösterilmez. About sayfasında yeşil "şu an" rozeti olarak çıkar.
+				</span>
+			</label>
 
 			<label>
 				Tanıtım Yazısı

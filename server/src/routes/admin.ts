@@ -9,6 +9,7 @@ import {
 	education,
 	experiences,
 	languages,
+	posts,
 	projects,
 	skill_categories,
 } from '../db/schema.js';
@@ -32,6 +33,7 @@ const about_schema = z.object({
 	github_url: z.string().url().max(512).nullable().optional(),
 	linkedin_url: z.string().url().max(512).nullable().optional(),
 	location: z.string().max(128).nullable().optional(),
+	current_status: z.string().max(255).nullable().optional(),
 });
 
 const project_schema = z.object({
@@ -233,6 +235,64 @@ admin_routes.put('/cv', async (c) => {
 			.where(eq(cv_meta.id, 1));
 	}
 
+	return c.json({ ok: true });
+});
+
+// ─── POSTS (blog) ────────────────────────────────────────────────
+const post_schema = z.object({
+	slug: z
+		.string()
+		.min(1)
+		.max(128)
+		.regex(/^[a-z0-9-]+$/, 'Slug sadece küçük harf, rakam ve tire içerebilir'),
+	title: z.string().min(1).max(255),
+	excerpt: z.string().max(500).nullable().optional(),
+	content_md: z.string().min(1),
+	is_published: z.boolean().default(true),
+	published_at: z.string().datetime().nullable().optional(),
+});
+
+admin_routes.get('/posts', async (c) => {
+	const rows = await db.select().from(posts).orderBy(desc(posts.created_at));
+	return c.json({ posts: rows });
+});
+
+admin_routes.post('/posts', async (c) => {
+	const data = await json_or_400(c, post_schema);
+	if (data instanceof Response) return data;
+
+	const inserted = await db.insert(posts).values({
+		...data,
+		excerpt: data.excerpt ?? undefined,
+		published_at: data.published_at ? new Date(data.published_at) : new Date(),
+	});
+	const id = Number(inserted[0].insertId);
+	const created = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
+	return c.json({ post: created[0] }, 201);
+});
+
+admin_routes.patch('/posts/:id', async (c) => {
+	const id = Number(c.req.param('id'));
+	if (!Number.isInteger(id) || id <= 0) return c.json({ error: 'invalid_id' }, 400);
+
+	const data = await json_or_400(c, post_schema.partial());
+	if (data instanceof Response) return data;
+
+	const update: Record<string, unknown> = { ...data, updated_at: new Date() };
+	if ('published_at' in data && data.published_at) {
+		update.published_at = new Date(data.published_at);
+	}
+
+	await db.update(posts).set(update).where(eq(posts.id, id));
+	const updated = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
+	if (updated.length === 0) return c.json({ error: 'not_found' }, 404);
+	return c.json({ post: updated[0] });
+});
+
+admin_routes.delete('/posts/:id', async (c) => {
+	const id = Number(c.req.param('id'));
+	if (!Number.isInteger(id) || id <= 0) return c.json({ error: 'invalid_id' }, 400);
+	await db.delete(posts).where(eq(posts.id, id));
 	return c.json({ ok: true });
 });
 

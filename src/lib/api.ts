@@ -46,6 +46,13 @@ export const api = {
 };
 
 /**
+ * Anonim event ping — analytics için. Hata olursa sessizce yutar.
+ */
+export function track(type: string, extra: Record<string, unknown> = {}): void {
+	api.post('/api/public/event', { type, ...extra }).catch(() => {});
+}
+
+/**
  * MySQL JSON kolonu bazı durumlarda string olarak gelir; tutarlı olarak array'e çevir.
  */
 export function parse_string_array(v: unknown): string[] {
@@ -72,6 +79,7 @@ export type PublicAbout = {
 	github_url: string | null;
 	linkedin_url: string | null;
 	location: string | null;
+	current_status: string | null;
 	updated_at: string;
 };
 
@@ -127,4 +135,34 @@ export type PublicCV = {
 	skill_categories: PublicSkillCategory[];
 	languages: PublicLanguage[];
 	cv_meta: { id: number; pdf_url: string | null } | null;
+};
+
+export type PublicPostSummary = {
+	id: number;
+	slug: string;
+	title: string;
+	excerpt: string | null;
+	published_at: string | null;
+};
+
+export type PublicPost = PublicPostSummary & {
+	content_md: string;
+};
+
+export type GithubStats = {
+	username: string;
+	avatar_url: string;
+	bio: string | null;
+	public_repos: number;
+	followers: number;
+	following: number;
+	top_repos: Array<{
+		name: string;
+		description: string | null;
+		stars: number;
+		forks: number;
+		language: string | null;
+		url: string;
+	}>;
+	updated_at: number;
 };

@@ -40,6 +40,7 @@ export const about = mysqlTable('about', {
 	github_url: varchar('github_url', { length: 512 }),
 	linkedin_url: varchar('linkedin_url', { length: 512 }),
 	location: varchar('location', { length: 128 }),
+	current_status: varchar('current_status', { length: 255 }),
 	updated_at: datetime('updated_at')
 		.notNull()
 		.default(sql`CURRENT_TIMESTAMP`),
@@ -115,6 +116,36 @@ export const contact_messages = mysqlTable('contact_messages', {
 		.default(sql`CURRENT_TIMESTAMP`),
 });
 
+export const events = mysqlTable('events', {
+	id: int('id').primaryKey().autoincrement(),
+	type: varchar('type', { length: 64 }).notNull(),
+	app_id: varchar('app_id', { length: 64 }),
+	project_id: int('project_id'),
+	post_slug: varchar('post_slug', { length: 128 }),
+	ip_hash: varchar('ip_hash', { length: 64 }),
+	user_agent: varchar('user_agent', { length: 255 }),
+	referrer: varchar('referrer', { length: 512 }),
+	created_at: datetime('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const posts = mysqlTable('posts', {
+	id: int('id').primaryKey().autoincrement(),
+	slug: varchar('slug', { length: 128 }).notNull().unique(),
+	title: varchar('title', { length: 255 }).notNull(),
+	excerpt: varchar('excerpt', { length: 500 }),
+	content_md: text('content_md').notNull(),
+	is_published: boolean('is_published').notNull().default(true),
+	published_at: datetime('published_at'),
+	created_at: datetime('created_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+	updated_at: datetime('updated_at')
+		.notNull()
+		.default(sql`CURRENT_TIMESTAMP`),
+});
+
 export const uploads = mysqlTable('uploads', {
 	id: int('id').primaryKey().autoincrement(),
 	filename: varchar('filename', { length: 255 }).notNull(),
@@ -136,3 +167,5 @@ export type SkillCategory = typeof skill_categories.$inferSelect;
 export type Language = typeof languages.$inferSelect;
 export type ContactMessage = typeof contact_messages.$inferSelect;
 export type Upload = typeof uploads.$inferSelect;
+export type Post = typeof posts.$inferSelect;
+export type Event = typeof events.$inferSelect;

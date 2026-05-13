@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx pnpm@10.12.3 check)"
+    ]
+  }
+}

@@ -5,6 +5,9 @@
 	import BootupScreen from './BootupScreen.svelte';
 	import ContextMenu from './ContextMenu.svelte';
 	import DesktopIcons from './DesktopIcons.svelte';
+	import InstallPrompt from './InstallPrompt.svelte';
+	import KonamiEgg from './KonamiEgg.svelte';
+	import Spotlight from './Spotlight.svelte';
 	import SystemUpdate from './SystemUpdate.svelte';
 	import WindowsArea from './Window/WindowsArea.svelte';
 
@@ -33,6 +36,9 @@
 	<Wallpaper />
 	<BootupScreen />
 	<SystemUpdate />
+	<InstallPrompt />
+	<Spotlight />
+	<KonamiEgg />
 
 	<ContextMenu target_element={mainEl} />
 </div>
