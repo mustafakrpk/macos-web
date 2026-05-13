@@ -82,10 +82,6 @@
 	</div>
 {/if}
 
-<!-- iframe => Firefox dahil tarayıcılarda autoplay için -->
-{#if import.meta.env.PROD && !hidden_splash_screen}
-	<iframe id="audio" src="/sounds/mac-startup-sound.mp3" allow="autoplay" title="boot sound"></iframe>
-{/if}
 
 <style>
 	.splash-screen {
@@ -165,9 +161,4 @@
 		height: 100%;
 	}
 
-	#audio {
-		position: absolute;
-		z-index: -9999;
-		display: none;
-	}
 </style>

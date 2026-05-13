@@ -2,453 +2,71 @@ import type { Theme } from '🍎/state/preferences.svelte.ts';
 
 export type Wallpaper = {
 	name: string;
-	type: 'standalone' | 'automatic' | 'dynamic';
-
-	thumbnail: string;
-
-	image?: string;
-
-	/** Timestamps definition in terms of when a new wallpaper should take effect */
-	timestamps?: {
-		wallpaper?: Record<number, string>;
-		theme?: Record<number, Theme['scheme']>;
-	};
+	gradient: string;
+	theme: Theme['scheme'];
 };
 
-const optimized_wallpapers = import.meta.glob('../../assets/wallpapers/*.{webp,jpg}', {
-	eager: true,
-	query: { w: 3000, quality: 98, format: 'webp' },
-}) as Record<string, any>;
-
-const wallpaperThumbnails = import.meta.glob('../../assets/wallpapers/*.{webp,jpg}', {
-	eager: true,
-	query: { w: 800, format: 'webp' },
-}) as Record<string, any>;
-
-const create_wallpapers_config = <TConfig = string>(
-	wallpaper_config: Record<keyof TConfig, Wallpaper>,
-): Record<keyof TConfig, Wallpaper> => {
-	const optimized_wallpapers_arr = Object.entries(optimized_wallpapers);
-
-	for (const [wallpaperName, config] of Object.entries(wallpaper_config)) {
-		const wallpaper = wallpaper_config[wallpaperName as keyof TConfig];
-		const thumbnail = config.thumbnail;
-
-		wallpaper.thumbnail = (
-			Object.entries(wallpaperThumbnails).find(([path]) => path.includes(thumbnail))[1] as any
-		).default;
-
-		wallpaper.image = (
-			optimized_wallpapers_arr.find(([path]) => path.includes(thumbnail))[1] as any
-		).default;
-
-		if (wallpaper.type !== 'standalone') {
-			for (const [time, imgName] of Object.entries(config.timestamps.wallpaper)) {
-				wallpaper.timestamps.wallpaper[time] = (
-					optimized_wallpapers_arr.find(([path]) => path.includes(imgName))[1] as any
-				).default;
-			}
-		}
-	}
-
-	return wallpaper_config;
-};
-
-export const wallpapers_config = create_wallpapers_config({
-	ventura: {
-		name: 'Ventura',
-		type: 'dynamic',
-
-		thumbnail: 'ventura-2',
-		timestamps: {
-			wallpaper: {
-				7: 'ventura-5',
-				9: 'ventura-2',
-				12: 'ventura-3',
-				17: 'ventura-4',
-				18: 'ventura-5',
-				19: 'ventura-1',
-			},
-			theme: {
-				7: 'light',
-				19: 'dark',
-			},
-		},
+export const wallpapers_config = {
+	'aurora-purple': {
+		name: 'Aurora Purple',
+		gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #2d1b69 100%)',
+		theme: 'dark' as const,
 	},
-
-	monterey: {
-		name: 'Monterey',
-		type: 'dynamic',
-		thumbnail: 'monterey-2',
-		timestamps: {
-			wallpaper: {
-				7: 'monterey-2',
-				9: 'monterey-3',
-				11: 'monterey-4',
-				13: 'monterey-5',
-				15: 'monterey-6',
-				16: 'monterey-7',
-				17: 'monterey-8',
-				18: 'monterey-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'sunset-warm': {
+		name: 'Sıcak Gün Batımı',
+		gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #fbb454 100%)',
+		theme: 'light' as const,
 	},
-
-	'big-sur-graphic': {
-		name: 'Big Sur Graphic',
-		type: 'dynamic',
-		thumbnail: 'big-sur-graphic-2',
-		timestamps: {
-			wallpaper: {
-				7: 'big-sur-graphic-2',
-				18: 'big-sur-graphic-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'ocean-deep': {
+		name: 'Derin Okyanus',
+		gradient: 'linear-gradient(180deg, #0f2027 0%, #203a43 50%, #2c5364 100%)',
+		theme: 'dark' as const,
 	},
-
-	'big-sur': {
-		name: 'Big sur',
-		type: 'dynamic',
-		thumbnail: 'big-sur-4',
-		timestamps: {
-			wallpaper: {
-				7: 'big-sur-2',
-				9: 'big-sur-3',
-				11: 'big-sur-4',
-				13: 'big-sur-5',
-				15: 'big-sur-6',
-				16: 'big-sur-7',
-				17: 'big-sur-8',
-				18: 'big-sur-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'mint-forest': {
+		name: 'Naneli Orman',
+		gradient: 'linear-gradient(135deg, #43cea2 0%, #185a9d 100%)',
+		theme: 'light' as const,
 	},
-
-	catalina: {
-		name: 'Catalina',
-		type: 'dynamic',
-		thumbnail: 'catalina-3',
-		timestamps: {
-			wallpaper: {
-				7: 'catalina-2',
-				9: 'catalina-3',
-				11: 'catalina-4',
-				13: 'catalina-5',
-				15: 'catalina-6',
-				16: 'catalina-7',
-				17: 'catalina-8',
-				18: 'catalina-1',
-			},
-			theme: {
-				9: 'light',
-				17: 'dark',
-			},
-		},
+	'midnight-blue': {
+		name: 'Gece Mavisi',
+		gradient: 'linear-gradient(180deg, #141e30 0%, #243b55 100%)',
+		theme: 'dark' as const,
 	},
-
-	mojave: {
-		name: 'Mojave',
-		type: 'dynamic',
-		thumbnail: 'mojave-2',
-		timestamps: {
-			wallpaper: {
-				7: 'mojave-2',
-				18: 'mojave-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'rose-gold': {
+		name: 'Gül Pembesi',
+		gradient: 'linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%)',
+		theme: 'light' as const,
 	},
-
-	desert: {
-		name: 'The Desert',
-		type: 'dynamic',
-		thumbnail: 'desert-5',
-		timestamps: {
-			wallpaper: {
-				7: 'desert-2',
-				9: 'desert-3',
-				11: 'desert-4',
-				13: 'desert-5',
-				15: 'desert-6',
-				16: 'desert-7',
-				17: 'desert-8',
-				18: 'desert-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'cosmic-fusion': {
+		name: 'Kozmik Füzyon',
+		gradient: 'linear-gradient(135deg, #ff00cc 0%, #333399 100%)',
+		theme: 'dark' as const,
 	},
-
-	dome: {
-		name: 'Dome',
-		type: 'dynamic',
-		thumbnail: 'dome-2',
-		timestamps: {
-			wallpaper: {
-				7: 'dome-2',
-				18: 'dome-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'mojito-fresh': {
+		name: 'Mojito',
+		gradient: 'linear-gradient(135deg, #1d976c 0%, #93f9b9 100%)',
+		theme: 'light' as const,
 	},
-
-	peak: {
-		name: 'Peak',
-		type: 'dynamic',
-		thumbnail: 'peak-2',
-		timestamps: {
-			wallpaper: {
-				7: 'peak-2',
-				18: 'peak-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'firewatch-dusk': {
+		name: 'Firewatch Alacakaranlık',
+		gradient: 'linear-gradient(180deg, #ff512f 0%, #dd2476 50%, #4a00e0 100%)',
+		theme: 'dark' as const,
 	},
-
-	iridescence: {
-		name: 'Iridescence',
-		type: 'dynamic',
-		thumbnail: 'iridescence-2',
-		timestamps: {
-			wallpaper: {
-				7: 'iridescence-2',
-				18: 'iridescence-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'morpheus-den': {
+		name: 'Morpheus Mağarası',
+		gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+		theme: 'dark' as const,
 	},
-
-	lake: {
-		name: 'Lake',
-		type: 'dynamic',
-		thumbnail: 'lake-4',
-		timestamps: {
-			wallpaper: {
-				7: 'lake-2',
-				9: 'lake-3',
-				11: 'lake-4',
-				13: 'lake-5',
-				15: 'lake-6',
-				16: 'lake-7',
-				17: 'lake-8',
-				18: 'lake-1',
-			},
-			theme: {
-				7: 'light',
-				18: 'dark',
-			},
-		},
+	'desert-bloom': {
+		name: 'Çöl Çiçeği',
+		gradient: 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
+		theme: 'light' as const,
 	},
-
-	'solar-grad': {
-		name: 'Solar Grad',
-		type: 'dynamic',
-		thumbnail: 'solar-grad-11',
-		timestamps: {
-			wallpaper: {
-				6: 'solar-grad-2',
-				7: 'solar-grad-3',
-				8: 'solar-grad-4',
-				9: 'solar-grad-5',
-				10: 'solar-grad-6',
-				11: 'solar-grad-7',
-				12: 'solar-grad-8',
-				13: 'solar-grad-9',
-				14: 'solar-grad-10',
-				15: 'solar-grad-11',
-				16: 'solar-grad-12',
-				17: 'solar-grad-13',
-				18: 'solar-grad-14',
-				19: 'solar-grad-5',
-				20: 'solar-grad-6',
-			},
-			theme: {
-				6: 'light',
-				20: 'dark',
-			},
-		},
+	'arctic-aurora': {
+		name: 'Kuzey Işıkları',
+		gradient: 'linear-gradient(135deg, #00d2ff 0%, #3a7bd5 50%, #00d2ff 100%)',
+		theme: 'dark' as const,
 	},
-
-	'kryptonian-demise': {
-		name: 'Kryptonian Demise',
-		type: 'standalone',
-		thumbnail: '38',
-	},
-
-	'nahargarh-sunset': {
-		name: 'Nahargarh Sunset',
-		type: 'standalone',
-		thumbnail: '39',
-	},
-
-	'somber-forest': {
-		name: 'Somber Forest',
-		type: 'standalone',
-		thumbnail: '40',
-	},
-
-	'blade-runner-2149': {
-		name: 'Blade Runner 2149',
-		type: 'standalone',
-		thumbnail: '41',
-	},
-
-	'lone-dune-wolf': {
-		name: 'Lone Dune Wolf',
-		type: 'standalone',
-		thumbnail: '42',
-	},
-
-	'childhood-innocence': {
-		name: 'Childhood Innocence',
-		type: 'standalone',
-		thumbnail: '43',
-	},
-
-	'fox-in-somber-forest': {
-		name: 'Fox in Somber Forest',
-		type: 'standalone',
-		thumbnail: '44',
-	},
-
-	'blood-diamond': {
-		name: 'Blood Diamond',
-		type: 'standalone',
-		thumbnail: '45',
-	},
-
-	'black-bird-in-a-city': {
-		name: 'Black Bird in a City',
-		type: 'standalone',
-		thumbnail: '46',
-	},
-
-	'sunrise-of-dreams': {
-		name: 'Sunrise of Dreams',
-		type: 'standalone',
-		thumbnail: '47',
-	},
-
-	'how-do-we-get-down': {
-		name: 'How do we get down?',
-		type: 'standalone',
-		thumbnail: '48',
-	},
-
-	'cozy-night-with-cat': {
-		name: 'Cozy Night with Cat',
-		type: 'standalone',
-		thumbnail: '49',
-	},
-
-	'age-of-titans': {
-		name: 'Age of Titans',
-		type: 'standalone',
-		thumbnail: '50',
-	},
-
-	dune: {
-		name: 'Dune',
-		type: 'standalone',
-		thumbnail: '51',
-	},
-
-	'vibrant-night': {
-		name: 'Vibrant Night',
-		type: 'standalone',
-		thumbnail: '52',
-	},
-
-	'cabin-in-woods': {
-		name: 'Cabin in the Woods',
-		type: 'standalone',
-		thumbnail: '53',
-	},
-
-	'asgardian-sunrise': {
-		name: 'Asgardian Sunrise',
-		type: 'standalone',
-		thumbnail: '54',
-	},
-
-	'asura-lok': {
-		name: 'Asura Lok',
-		type: 'standalone',
-		thumbnail: '55',
-	},
-
-	'my-neighbour-totoro': {
-		name: 'My Neighbour Totoro',
-		type: 'standalone',
-		thumbnail: '56',
-	},
-
-	tron: {
-		name: 'Tron',
-		type: 'standalone',
-		thumbnail: '57',
-	},
-	leopard: {
-		name: 'Leopard',
-		type: 'standalone',
-		thumbnail: '58',
-	},
-	'retro-90s': {
-		name: 'Retro 90s',
-		type: 'standalone',
-		thumbnail: '59',
-	},
-	'lost-lands': {
-		name: 'Lost Lands',
-		type: 'standalone',
-		thumbnail: '60',
-	},
-	'flower-field': {
-		name: 'Flower Field',
-		type: 'standalone',
-		thumbnail: '61',
-	},
-	'cherry-blossoms': {
-		name: 'Cherry Blossoms',
-		type: 'standalone',
-		thumbnail: '62',
-	},
-	'indian-gardens': {
-		name: 'Indian Gardens',
-		type: 'standalone',
-		thumbnail: '63',
-	},
-	'along-the-ganges': {
-		name: 'Along the Ganges',
-		type: 'standalone',
-		thumbnail: '64',
-	},
-});
+} as const;
 
 export type WallpaperID = keyof typeof wallpapers_config;

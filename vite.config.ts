@@ -19,39 +19,38 @@ export default defineConfig({
 		VitePWA({
 			includeAssets: [
 				'robots.txt',
-				'app-icons/finder/32.png',
+				'icons/32.png',
 				'cover-image.png',
 				'cursors/(normal|link|text|help)-select.svg',
-				'**/*.mp3',
 			],
 			manifest: {
 				name: 'Mustafa Kırpık — Portfolyo',
 				short_name: 'Mustafa Kırpık',
 				theme_color: '#000000',
-				description: 'Mustafa Kırpık kişisel portfolyo sitesi — macOS masaüstü deneyimi.',
+				description: 'Mustafa Kırpık kişisel portfolyo sitesi — masaüstü deneyimi.',
 				icons: [
 					{
-						src: 'app-icons/finder/128.png',
+						src: 'icons/128.png',
 						sizes: '128x128',
 						type: 'image/png',
 					},
 					{
-						src: 'app-icons/finder/192.png',
+						src: 'icons/192.png',
 						sizes: '192x192',
 						type: 'image/png',
 					},
 					{
-						src: 'app-icons/finder/256.png',
+						src: 'icons/256.png',
 						sizes: '256x256',
 						type: 'image/png',
 					},
 					{
-						src: 'app-icons/finder/512.png',
+						src: 'icons/512.png',
 						sizes: '512x512',
 						type: 'image/png',
 					},
 					{
-						src: 'app-icons/finder/512.png',
+						src: 'icons/512.png',
 						sizes: '512x512',
 						type: 'image/png',
 						purpose: 'any maskable',

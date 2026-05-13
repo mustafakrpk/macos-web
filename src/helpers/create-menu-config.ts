@@ -1,40 +1,26 @@
 const apple_menu = {
 	title: 'apple',
 	menu: {
-		'about-this-mac': {
-			title: 'About This Mac',
+		'about-me': {
+			title: 'Hakkımda',
 			breakAfter: true,
 		},
-		'system-preferences': {
-			title: 'System Preferences...',
-		},
-		'app-store': {
-			title: 'App Store...',
+		preferences: {
+			title: 'Tercihler...',
 			breakAfter: true,
 		},
-		'recent-items': {
-			title: 'Recent Items',
-			breakAfter: true,
+		github: {
+			title: 'GitHub',
 		},
-		'force-quit': {
-			title: 'Force Quit...',
-			breakAfter: true,
-		},
-		sleep: {
-			title: 'Sleep',
-		},
-		restart: {
-			title: 'Restart...',
-		},
-		shutdown: {
-			title: 'Shut Down...',
+		linkedin: {
+			title: 'LinkedIn',
 			breakAfter: true,
 		},
 		'lock-screen': {
-			title: 'Lock Screen',
+			title: 'Ekranı Kilitle',
 		},
 		logout: {
-			title: 'Log Out User...',
+			title: 'Çıkış Yap...',
 		},
 	},
 };

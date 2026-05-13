@@ -11,7 +11,6 @@
 
 	onMount(async () => {
 		await sleep(100);
-
 		motion_val.value = 1;
 	});
 
@@ -33,13 +32,7 @@
 
 		<br />
 
-		<h1 style:display="flex" style:align-items="center" style:gap="0.5rem">
-			Nothing here yet <img
-				style="height: 1em; width: auto; transform: translateY(0.1em);"
-				src="/emojis/wink.png"
-				alt="Wink Emoji"
-			/>
-		</h1>
+		<h1>Burada henüz içerik yok ✨</h1>
 	</section>
 </section>
 
@@ -76,5 +69,11 @@
 	img {
 		max-width: 8rem;
 		aspect-ratio: 1 / 1;
+	}
+
+	h1 {
+		font-size: 1.2rem;
+		color: hsla(var(--system-color-dark-hsl), 0.6);
+		margin-top: 1rem;
 	}
 </style>

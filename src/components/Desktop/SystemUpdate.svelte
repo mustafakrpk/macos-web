@@ -52,16 +52,16 @@
 			width="128"
 			height="128"
 			src="/app-icons/system-preferences/256.webp"
-			alt="AppStore app"
+			alt="System Preferences"
 			draggable="false"
 		/>
 
-		<h3>Updates Available</h3>
-		<p>Do you want to restart to install these updates now?</p>
+		<h3>Yeni sürüm hazır</h3>
+		<p>Güncellemeleri yüklemek için yeniden başlatmak ister misin?</p>
 
 		<div class="buttons">
-			<button onclick={close}>Later</button>
-			<button class="confirm" onclick={handle_update_app}> Update </button>
+			<button onclick={close}>Sonra</button>
+			<button class="confirm" onclick={handle_update_app}>Güncelle</button>
 		</div>
 	</section>
 </SystemDialog>

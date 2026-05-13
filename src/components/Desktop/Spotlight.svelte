@@ -11,6 +11,9 @@
 		| { kind: 'app'; app_id: AppID; title: string; subtitle: string }
 		| { kind: 'project'; project: PublicProject };
 
+	const is_mac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+	const mod_key = is_mac ? '⌘' : 'Ctrl';
+
 	let open = $state(false);
 	let query = $state('');
 	let selected_index = $state(0);
@@ -170,7 +173,7 @@
 		<div class="footer">
 			<span><kbd>↑</kbd><kbd>↓</kbd> gezin</span>
 			<span><kbd>⏎</kbd> aç</span>
-			<span><kbd>⌘K</kbd> aç/kapat</span>
+			<span><kbd>{mod_key}</kbd><kbd>K</kbd> aç/kapat</span>
 		</div>
 	</div>
 {/if}

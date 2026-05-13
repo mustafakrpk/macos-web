@@ -4,7 +4,6 @@ import { persisted } from './persisted.svelte.ts';
 
 export type WallpaperSettings = {
 	id: WallpaperID;
-	image: string;
 	canControlTheme: boolean;
 };
 
@@ -20,8 +19,7 @@ export const preferences = persisted('macos:preferences', {
 		primaryColor: 'blue',
 	} as Theme,
 	wallpaper: {
-		image: 'ventura-2',
-		id: 'ventura',
+		id: 'aurora-purple',
 		canControlTheme: true,
 	} as WallpaperSettings,
 });

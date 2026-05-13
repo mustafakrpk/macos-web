@@ -377,8 +377,8 @@ export const finder_menu_config = create_menu_config({
 				title: 'Send Finder Feedback',
 				breakAfter: true,
 			},
-			'macos-help': {
-				title: 'macOS Help',
+			'site-help': {
+				title: 'Site Yardımı',
 			},
 		},
 	},

@@ -22,10 +22,7 @@
 	let containerEl: HTMLElement;
 
 	function toggleTheme() {
-		if (
-			wallpapers_config[preferences.wallpaper.id].type === 'dynamic' &&
-			preferences.wallpaper.canControlTheme
-		) {
+		if (preferences.wallpaper.canControlTheme) {
 			_is_theme_warning_dialog_open = true;
 			return;
 		}
@@ -121,15 +118,15 @@
 	>
 		<ActionCenterTile grid={[1, 1]} onclick={openWallpapersApp}>
 			<div class="wallpaper-tile">
-				<img
+				<div
 					class="wallpaper-thumbnail"
-					src={wallpapers_config[preferences.wallpaper.id].thumbnail}
-					alt="Current wallpaper"
-				/>
+					style:background-image={wallpapers_config[preferences.wallpaper.id]?.gradient ?? ''}
+					aria-label="Mevcut duvar kağıdı"
+				></div>
 
 				<div class="wallpaper-info">
-					<h3>{wallpapers_config[preferences.wallpaper.id].name}</h3>
-					<p>{wallpapers_config[preferences.wallpaper.id].type} wallpaper</p>
+					<h3>{wallpapers_config[preferences.wallpaper.id]?.name ?? 'Duvar Kağıdı'}</h3>
+					<p>Gradient duvar kağıdı</p>
 				</div>
 			</div>
 		</ActionCenterTile>
@@ -253,12 +250,11 @@
 
 		padding: 0.25rem 0 0.25rem 0.25rem;
 
-		img {
+		.wallpaper-thumbnail {
 			aspect-ratio: 1 / 1;
 			height: 4.5rem;
-
-			object-fit: cover;
-
+			background-size: cover;
+			background-position: center;
 			border-radius: 0.5rem;
 		}
 

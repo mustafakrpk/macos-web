@@ -144,6 +144,12 @@
 					{/if}
 				</div>
 			{/if}
+
+			<footer class="credits">
+				Bu site açık kaynak araçlarla yapıldı (Svelte, Hono, Drizzle).
+				Köpek animasyonu <a href="https://lottiefiles.com" use:external>LottieFiles</a>'dan,
+				ikonlar <a href="https://pictogrammers.com/library/mdi/" use:external>MDI</a>'dan.
+			</footer>
 		{/if}
 	</section>
 </section>
@@ -302,6 +308,24 @@
 
 		&.error {
 			color: hsl(0, 70%, 50%);
+		}
+	}
+
+	.credits {
+		margin-top: 2rem;
+		padding-top: 1rem;
+		border-top: 1px solid hsla(var(--system-color-dark-hsl), 0.08);
+		font-size: 0.75rem;
+		color: hsla(var(--system-color-dark-hsl), 0.5);
+		line-height: 1.5;
+		max-width: 32rem;
+
+		a {
+			color: hsla(var(--system-color-dark-hsl), 0.7);
+		}
+
+		a:hover {
+			color: hsl(232, 75%, 55%);
 		}
 	}
 

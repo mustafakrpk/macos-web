@@ -233,7 +233,7 @@
 		});
 
 		lines = [
-			{ kind: 'info', text: 'macOS Web Terminal — Mustafa Kırpık' },
+			{ kind: 'info', text: 'Mustafa Kırpık — Portfolyo Terminal' },
 			{ kind: 'info', text: '"help" yaz, komutları gör.' },
 			{ kind: 'info', text: '' },
 		];

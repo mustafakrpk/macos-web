@@ -41,7 +41,7 @@ await db.insert(projects).values([
 	{
 		title: 'Kişisel Portfolyo',
 		description:
-			'macOS masaüstü deneyimi sunan kişisel portfolyo sitesi. Svelte 5 runes, TypeScript ve Vite kullanılarak geliştirildi.',
+			'İşletim sistemi tarzında masaüstü deneyimi sunan kişisel portfolyo sitesi. Svelte 5 runes, TypeScript ve Vite kullanılarak geliştirildi.',
 		stack: ['Svelte 5', 'TypeScript', 'Vite', 'PWA'],
 		github_url: 'https://github.com/mustafakrpk/macos-web',
 		live_url: null,

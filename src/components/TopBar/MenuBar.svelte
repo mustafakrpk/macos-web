@@ -44,7 +44,6 @@
 <style>
 	.container {
 		height: 100%;
-
 		display: flex;
 		position: relative;
 	}
@@ -56,14 +55,10 @@
 
 	.menu-button {
 		font-weight: 500;
-
 		border-radius: 0.25rem;
-
 		position: relative;
 		z-index: 1;
-
 		padding: 0 0.5rem;
-
 		height: 100%;
 
 		&.default-menu {
@@ -73,30 +68,23 @@
 
 		&::after {
 			content: '';
-
 			position: absolute;
 			top: 0;
 			left: 0;
 			z-index: -1;
-
 			height: 100%;
 			width: 100%;
-
 			border-radius: inherit;
-
 			transform: scale(var(--scale), var(--scale));
 			transform-origin: center center;
-
 			transition: transform 100ms ease;
-
 			background-color: hsla(var(--system-color-dark-hsl), 0.2);
 		}
 	}
 
 	.apple-icon-button {
-		margin: 0 0rem 0 0.5rem;
+		margin: 0 0 0 0.5rem;
 		padding: 0 0.7rem;
-
 		display: block;
 
 		:global(svg) {

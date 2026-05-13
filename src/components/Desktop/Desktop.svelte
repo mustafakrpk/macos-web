@@ -5,6 +5,7 @@
 	import BootupScreen from './BootupScreen.svelte';
 	import ContextMenu from './ContextMenu.svelte';
 	import DesktopIcons from './DesktopIcons.svelte';
+	import DogPet from './DogPet.svelte';
 	import InstallPrompt from './InstallPrompt.svelte';
 	import KonamiEgg from './KonamiEgg.svelte';
 	import Spotlight from './Spotlight.svelte';
@@ -39,6 +40,7 @@
 	<InstallPrompt />
 	<Spotlight />
 	<KonamiEgg />
+	<DogPet />
 
 	<ContextMenu target_element={mainEl} />
 </div>
