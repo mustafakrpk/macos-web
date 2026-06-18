@@ -1,4 +1,5 @@
 import { serve } from '@hono/node-server';
+import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -44,6 +45,17 @@ app.use('/api/*', rate_limit({ window_ms: 60_000, max: 120 }));
 // Contact ve OAuth callback için sıkı limit
 app.use('/api/public/contact', rate_limit({ window_ms: 60_000, max: 5 }));
 app.use('/api/auth/github/callback', rate_limit({ window_ms: 60_000, max: 10 }));
+
+// Yüklenen dosyaları serve et (dev'de Hono, prod'da nginx).
+// UPLOAD_DIR genelde "./uploads" — serveStatic proje kökünden relative çalışır.
+const upload_root = env.UPLOAD_DIR.replace(/^\.?\/?/, '').replace(/\/$/, '');
+app.use(
+	'/uploads/*',
+	serveStatic({
+		root: `./${upload_root}`,
+		rewriteRequestPath: (path) => path.replace(/^\/uploads/, ''),
+	}),
+);
 
 app.get('/api/ping', (c) =>
 	c.json({

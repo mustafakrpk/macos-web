@@ -166,6 +166,9 @@
 <style>
 	img {
 		will-change: width;
+		border-radius: 22%;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
 	}
 
 	button {

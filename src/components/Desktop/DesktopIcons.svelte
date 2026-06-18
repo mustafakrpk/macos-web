@@ -117,7 +117,8 @@
 		img {
 			width: 3.5rem;
 			height: 3.5rem;
-			object-fit: contain;
+			object-fit: cover;
+			border-radius: 22%;
 			filter: drop-shadow(0 2px 4px hsla(0, 0%, 0%, 0.3));
 		}
 
