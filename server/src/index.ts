@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono } from 'hono';
@@ -46,13 +47,14 @@ app.use('/api/*', rate_limit({ window_ms: 60_000, max: 120 }));
 app.use('/api/public/contact', rate_limit({ window_ms: 60_000, max: 5 }));
 app.use('/api/auth/github/callback', rate_limit({ window_ms: 60_000, max: 10 }));
 
-// Yüklenen dosyaları serve et (dev'de Hono, prod'da nginx).
-// UPLOAD_DIR genelde "./uploads" — serveStatic proje kökünden relative çalışır.
-const upload_root = env.UPLOAD_DIR.replace(/^\.?\/?/, '').replace(/\/$/, '');
+// Yüklenen dosyaları serve et. UPLOAD_DIR göreli ("./uploads") veya mutlak
+// ("/var/www/.../uploads") olabilir; resolve() ikisini de doğru mutlak yola çevirir
+// ve save_upload ile aynı konumu kullanır.
+const upload_root = resolve(env.UPLOAD_DIR);
 app.use(
 	'/uploads/*',
 	serveStatic({
-		root: `./${upload_root}`,
+		root: upload_root,
 		rewriteRequestPath: (path) => path.replace(/^\/uploads/, ''),
 	}),
 );

@@ -12,6 +12,7 @@
 		"db:migrate": "tsx --env-file=.env src/db/migrate.ts",
 		"db:seed": "tsx --env-file=.env src/db/seed.ts",
 		"db:import-github": "tsx --env-file=.env src/db/import-github-projects.ts",
+		"db:import-cv": "tsx --env-file=.env src/db/import-cv.ts",
 		"db:studio": "drizzle-kit studio",
 		"test": "vitest run",
 		"test:watch": "vitest"

@@ -34,7 +34,9 @@
 	});
 
 	function format_period(start: string, end: string | null): string {
-		return end ? `${start} - ${end}` : `${start} - Günümüz`;
+		if (!end) return `${start} - Günümüz`;
+		if (start === end) return start;
+		return `${start} - ${end}`;
 	}
 </script>
 
