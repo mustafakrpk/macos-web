@@ -5,7 +5,7 @@
 server {
     listen 80;
     listen [::]:80;
-    server_name senin-domain.com www.senin-domain.com;
+    server_name portfolio.xn--mustafakrpk-6zbc.com;
 
     # certbot HTTPS'e yönlendirecek; manuel:
     # return 301 https://$host$request_uri;

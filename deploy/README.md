@@ -6,7 +6,7 @@
 ## 0. Ön gereksinimler
 
 - Ubuntu 22.04 sunucu, root veya sudo erişimi.
-- Bir alan adı (`senin-domain.com`) sunucuya yönlendirilmiş (A kaydı).
+- Bir alan adı (`portfolio.xn--mustafakrpk-6zbc.com`) sunucuya yönlendirilmiş (A kaydı).
 - GitHub'ta bir OAuth App. (Aşağıda nasıl oluşturulacağı var.)
 
 ---
@@ -56,8 +56,8 @@ EXIT;
 1. https://github.com/settings/developers → **New OAuth App**
 2. Doldur:
    - **Application name:** Mustafa Kirpik Portfolio
-   - **Homepage URL:** `https://senin-domain.com`
-   - **Authorization callback URL:** `https://senin-domain.com/api/auth/github/callback`
+   - **Homepage URL:** `https://portfolio.xn--mustafakrpk-6zbc.com`
+   - **Authorization callback URL:** `https://portfolio.xn--mustafakrpk-6zbc.com/api/auth/github/callback`
 3. **Register application** → karşına `Client ID` çıkar.
 4. **Generate a new client secret** → secret'i kaydet (bir kez gösterilir).
 
@@ -94,7 +94,7 @@ nano .env
 ```bash
 PORT=3000
 NODE_ENV=production
-PUBLIC_BASE_URL=https://senin-domain.com
+PUBLIC_BASE_URL=https://portfolio.xn--mustafakrpk-6zbc.com
 
 DATABASE_URL=mysql://portfolio_user:GUCLU_BIR_SIFRE@localhost:3306/portfolio_db
 
@@ -104,7 +104,7 @@ ADMIN_GITHUB_USERNAME=mustafakrpk
 
 GITHUB_CLIENT_ID=4. adımdaki client id
 GITHUB_CLIENT_SECRET=4. adımdaki secret
-GITHUB_REDIRECT_URL=https://senin-domain.com/api/auth/github/callback
+GITHUB_REDIRECT_URL=https://portfolio.xn--mustafakrpk-6zbc.com/api/auth/github/callback
 
 UPLOAD_DIR=/var/www/portfolio/uploads
 UPLOAD_PUBLIC_URL=/uploads
@@ -148,15 +148,15 @@ sudo journalctl -u portfolio -f
 
 ```bash
 sudo cp /var/www/portfolio/deploy/nginx.conf.example /etc/nginx/sites-available/portfolio
-sudo nano /etc/nginx/sites-available/portfolio   # senin-domain.com → gerçek domain
+sudo nano /etc/nginx/sites-available/portfolio   # portfolio.xn--mustafakrpk-6zbc.com → gerçek domain
 sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/portfolio
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-Test: `http://senin-domain.com` açıldığında portfolyo görünmeli.
-`http://senin-domain.com/api/ping` → `{"ok": true, ...}` dönmeli.
+Test: `http://portfolio.xn--mustafakrpk-6zbc.com` açıldığında portfolyo görünmeli.
+`http://portfolio.xn--mustafakrpk-6zbc.com/api/ping` → `{"ok": true, ...}` dönmeli.
 
 ---
 
@@ -164,7 +164,7 @@ Test: `http://senin-domain.com` açıldığında portfolyo görünmeli.
 
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
-sudo certbot --nginx -d senin-domain.com -d www.senin-domain.com
+sudo certbot --nginx -d portfolio.xn--mustafakrpk-6zbc.com
 ```
 
 certbot otomatik olarak nginx config'ine HTTPS ekler ve redirect kurar.
@@ -174,7 +174,7 @@ Yenileme cron olarak gelir (`sudo systemctl status certbot.timer`).
 
 ## 8. İlk admin girişi
 
-1. Tarayıcıda `https://senin-domain.com/admin/login` aç.
+1. Tarayıcıda `https://portfolio.xn--mustafakrpk-6zbc.com/admin/login` aç.
 2. **GitHub ile Giriş Yap** → GitHub yetkilendirme → callback.
 3. `mustafakrpk` GitHub kullanıcı adıyla giriş yapıyorsan `/admin` dashboard açılır.
 4. **Hakkımda → Projeler → Özgeçmiş** sayfalarından içerikleri kendi bilgilerinle doldur.

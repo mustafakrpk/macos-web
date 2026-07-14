@@ -1,0 +1,14 @@
+# SPA fallback — dosya/dizin yoksa index.html'e yönlendir (client-side routing: /admin vb.)
+# public/ içeriği build sırasında dist/ köküne kopyalandığı için her build'de korunur.
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	# Gerçek dosya veya dizinse dokunma
+	RewriteCond %{REQUEST_FILENAME} -f [OR]
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^ - [L]
+	# API ve uploads backend'e gider (nginx proxy zaten yakalar; güvenlik için burada da hariç tut)
+	RewriteRule ^(api|uploads)/ - [L]
+	# Geri kalan her şey SPA girişine
+	RewriteRule ^ index.html [L]
+</IfModule>
