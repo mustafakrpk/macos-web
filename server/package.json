@@ -11,7 +11,9 @@
 		"db:generate": "drizzle-kit generate",
 		"db:migrate": "tsx --env-file=.env src/db/migrate.ts",
 		"db:seed": "tsx --env-file=.env src/db/seed.ts",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"test": "vitest run",
+		"test:watch": "vitest"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.13.7",
@@ -29,6 +31,8 @@
 		"dotenv": "^16.4.5",
 		"drizzle-kit": "^0.28.1",
 		"tsx": "^4.19.2",
-		"typescript": "^5.6.3"
+		"typescript": "^5.6.3",
+		"vite": "^5.4.21",
+		"vitest": "^2.1.9"
 	}
 }
