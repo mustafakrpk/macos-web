@@ -3,5 +3,5 @@ User-agent: *
 Disallow: /admin
 Disallow: /api
 
-# Canlıya alırken senin-domain.com'u gerçek alan adınla değiştir.
-Sitemap: https://senin-domain.com/sitemap.xml
+# Canlıya alırken portfolio.xn--mustafakrpk-6zbc.com'u gerçek alan adınla değiştir.
+Sitemap: https://portfolio.xn--mustafakrpk-6zbc.com/sitemap.xml
