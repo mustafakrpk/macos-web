@@ -4,11 +4,13 @@
 	import DarkMode from '~icons/gg/dark-mode';
 	import CheckedIcon from '~icons/ic/outline-check';
 	import TransitionMaskedIcon from '~icons/mdi/transition-masked';
+	import TranslateIcon from '~icons/mdi/translate';
 	import NotchIcon from '~icons/pepicons/smartphone-notch';
 
 	import { colors } from '🍎/configs/theme/colors.config';
 	import { wallpapers_config } from '🍎/configs/wallpapers/wallpaper.config';
 	import { apps } from '🍎/state/apps.svelte.ts';
+	import { i18n, t } from '🍎/state/i18n.svelte.ts';
 	import { should_show_notch } from '🍎/state/menubar.svelte';
 	import { preferences } from '🍎/state/preferences.svelte.ts';
 
@@ -64,7 +66,7 @@
 			<span class="toggle-icon" class:filled={preferences.theme.scheme === 'dark'}>
 				<DarkMode />
 			</span>
-			Dark mode
+			{t('action.dark_mode')}
 		</ActionCenterTile>
 	</ActionCenterSurface>
 
@@ -78,7 +80,7 @@
 			<span class="toggle-icon" class:filled={!preferences.reduced_motion}>
 				<TransitionMaskedIcon />
 			</span>
-			Animations
+			{t('action.animations')}
 		</ActionCenterTile>
 	</ActionCenterSurface>
 
@@ -90,7 +92,7 @@
 	>
 		<ActionCenterTile grid={[1, 1]} role="region">
 			<div class="color-picker">
-				<p>System Color</p>
+				<p>{t('action.system_color')}</p>
 				<div class="color-palette">
 					{#each Object.keys(colors) as colorID}
 						{@const { contrastHsl, hsl } = colors[colorID][preferences.theme.scheme]}
@@ -121,12 +123,12 @@
 				<div
 					class="wallpaper-thumbnail"
 					style:background-image={wallpapers_config[preferences.wallpaper.id]?.gradient ?? ''}
-					aria-label="Mevcut duvar kağıdı"
+					aria-label={t('action.current_wallpaper')}
 				></div>
 
 				<div class="wallpaper-info">
-					<h3>{wallpapers_config[preferences.wallpaper.id]?.name ?? 'Duvar Kağıdı'}</h3>
-					<p>Gradient duvar kağıdı</p>
+					<h3>{wallpapers_config[preferences.wallpaper.id]?.name ?? t('action.wallpaper')}</h3>
+					<p>{t('action.wallpaper_subtitle')}</p>
 				</div>
 			</div>
 		</ActionCenterTile>
@@ -143,7 +145,24 @@
 				<span class="toggle-icon" class:filled={should_show_notch.value}>
 					<NotchIcon />
 				</span>
-				Notch
+				{t('action.notch')}
+			</div>
+		</ActionCenterTile>
+	</ActionCenterSurface>
+
+	<ActionCenterSurface
+		grid={[
+			[1, 12],
+			[10, 2],
+		]}
+	>
+		<ActionCenterTile grid={[1, 1]} onclick={() => i18n.toggle()}>
+			<div class="language-tile">
+				<span class="toggle-icon filled">
+					<TranslateIcon />
+				</span>
+				<span class="language-label">{t('action.language')}</span>
+				<span class="language-value">{i18n.locale.toUpperCase()}</span>
 			</div>
 		</ActionCenterTile>
 	</ActionCenterSurface>
@@ -318,5 +337,22 @@
 
 		width: 100%;
 		height: 100%;
+	}
+
+	.language-tile {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+
+		padding: 0 0.6rem;
+
+		width: 100%;
+		height: 100%;
+	}
+
+	.language-value {
+		margin-left: auto;
+		font-weight: 600;
+		opacity: 0.7;
 	}
 </style>

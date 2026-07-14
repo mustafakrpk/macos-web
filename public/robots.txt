@@ -1,3 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /api
+
+# Canlıya alırken senin-domain.com'u gerçek alan adınla değiştir.
+Sitemap: https://senin-domain.com/sitemap.xml
