@@ -29,6 +29,14 @@ const env_schema = z.object({
 	SMTP_PASS: z.string().default(''),
 	SMTP_FROM: z.string().default(''),
 	NOTIFY_EMAIL: z.string().email().optional(),
+
+	// AI Asistan — OpenAI-uyumlu bir sağlayıcı (varsayılan: Google Gemini ücretsiz katmanı).
+	// CHAT_API_KEY boş bırakılırsa /api/public/chat 503 döner (özellik kapalı).
+	CHAT_API_KEY: z.string().default(''),
+	CHAT_API_URL: z
+		.string()
+		.default('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'),
+	CHAT_MODEL: z.string().default('gemini-2.0-flash'),
 });
 
 const parsed = env_schema.safeParse(process.env);
