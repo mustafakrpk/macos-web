@@ -96,6 +96,16 @@ const wallpapers = create_app_config({
 	dock_breaks_before: true,
 });
 
+const assistant = create_app_config({
+	title: 'Asistan',
+	resizable: true,
+
+	height: 600,
+	width: 480,
+
+	dock_breaks_before: true,
+});
+
 const github = create_app_config({
 	title: 'GitHub',
 	resizable: true,
@@ -127,6 +137,7 @@ export const apps_config = {
 	calendar,
 	calculator,
 	wallpapers,
+	assistant,
 	'view-source': github,
 	vercel: linkedin,
 };

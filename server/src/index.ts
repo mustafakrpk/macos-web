@@ -13,6 +13,7 @@ import {
 	public_event_routes,
 } from './routes/analytics.js';
 import { auth_routes } from './routes/auth.js';
+import { chat_routes } from './routes/chat.js';
 import { github_routes } from './routes/github.js';
 import { public_routes } from './routes/public.js';
 import { upload_routes } from './routes/uploads.js';
@@ -43,8 +44,9 @@ app.use(
 // Genel API rate limit: dakikada 120 istek per IP+path
 app.use('/api/*', rate_limit({ window_ms: 60_000, max: 120 }));
 
-// Contact ve OAuth callback için sıkı limit
+// Contact, chat ve OAuth callback için sıkı limit
 app.use('/api/public/contact', rate_limit({ window_ms: 60_000, max: 5 }));
+app.use('/api/public/chat', rate_limit({ window_ms: 60_000, max: 15 }));
 app.use('/api/auth/github/callback', rate_limit({ window_ms: 60_000, max: 10 }));
 
 // Yüklenen dosyaları serve et. UPLOAD_DIR göreli ("./uploads") veya mutlak
@@ -70,6 +72,7 @@ app.get('/api/ping', (c) =>
 app.route('/api/auth', auth_routes);
 app.route('/api/public', public_routes);
 app.route('/api/public', public_event_routes);
+app.route('/api/public/chat', chat_routes);
 app.route('/api/public/github', github_routes);
 app.route('/api/admin', admin_routes);
 app.route('/api/admin/analytics', admin_analytics_routes);

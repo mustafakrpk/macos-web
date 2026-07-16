@@ -15,6 +15,7 @@ const initial_open: Record<AppID, boolean> = {
 	calendar: false,
 	calculator: false,
 	wallpapers: false,
+	assistant: false,
 	'view-source': false,
 	vercel: false,
 };
@@ -32,6 +33,7 @@ const initial_z: Record<AppID, number> = {
 	calendar: 0,
 	calculator: 0,
 	wallpapers: 0,
+	assistant: 0,
 	'view-source': 0,
 	vercel: 0,
 };
@@ -49,6 +51,7 @@ const initial_fullscreen: Record<AppID, boolean> = {
 	calendar: false,
 	calculator: false,
 	wallpapers: false,
+	assistant: false,
 	'view-source': false,
 	vercel: false,
 };

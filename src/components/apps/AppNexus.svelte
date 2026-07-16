@@ -54,6 +54,10 @@
 	{#await import('./Social/Social.svelte') then { default: Social }}
 		<Social />
 	{/await}
+{:else if app_id === 'assistant'}
+	{#await import('./AskMe/AskMe.svelte') then { default: AskMe }}
+		<AskMe />
+	{/await}
 {:else}
 	{#await import('./AppStore/AppStore.svelte') then { default: AppStore }}
 		<AppStore {app_id} />
