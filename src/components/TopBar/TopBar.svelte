@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { fade_out } from '🍎/helpers/fade';
+	import { device } from '🍎/state/device.svelte.ts';
 	import { should_show_notch } from '🍎/state/menubar.svelte.ts';
 	import { presence } from '🍎/state/presence.svelte.ts';
 
@@ -11,7 +12,11 @@
 </script>
 
 <header>
-	<MenuBar />
+	{#if device.is_mobile}
+		<span class="brand">Mustafa Kırpık</span>
+	{:else}
+		<MenuBar />
+	{/if}
 
 	<span style:flex="1 1 auto"></span>
 
@@ -137,6 +142,13 @@
 		font-size: 1.1rem;
 		line-height: 1;
 		vertical-align: middle;
+	}
+
+	.brand {
+		padding: 0 0.6rem;
+		font-weight: 600;
+		font-size: 0.82rem;
+		z-index: 1;
 	}
 
 	.presence {
