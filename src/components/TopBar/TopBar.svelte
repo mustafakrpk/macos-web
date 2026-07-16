@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { fade_out } from '🍎/helpers/fade';
 	import { should_show_notch } from '🍎/state/menubar.svelte.ts';
+	import { presence } from '🍎/state/presence.svelte.ts';
 
 	import { sineIn } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
@@ -17,6 +18,18 @@
 	{#if should_show_notch.value}
 		<div class="notch" in:fade={{ duration: 150, easing: sineIn }} out:fade_out>
 			<span class="emoji">😉</span>
+		</div>
+	{/if}
+
+	{#if presence.connected}
+		<div
+			class="presence"
+			class:solo={presence.count <= 1}
+			title="{presence.count} kişi çevrimiçi"
+			transition:fade={{ duration: 150 }}
+		>
+			<span class="dot"></span>
+			<span class="num">{presence.count}</span>
 		</div>
 	{/if}
 
@@ -124,5 +137,44 @@
 		font-size: 1.1rem;
 		line-height: 1;
 		vertical-align: middle;
+	}
+
+	.presence {
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
+		height: 100%;
+		padding: 0 0.55rem;
+		font-size: 0.78rem;
+		font-weight: 600;
+		z-index: 1;
+		cursor: default;
+		user-select: none;
+
+		.dot {
+			width: 0.5rem;
+			height: 0.5rem;
+			border-radius: 50%;
+			background: #22c55e;
+			box-shadow: 0 0 0 0 hsla(140, 70%, 45%, 0.6);
+			animation: presence-pulse 2s infinite;
+		}
+
+		&.solo .dot {
+			background: hsla(var(--system-color-dark-hsl), 0.35);
+			animation: none;
+		}
+	}
+
+	@keyframes presence-pulse {
+		0% {
+			box-shadow: 0 0 0 0 hsla(140, 70%, 45%, 0.6);
+		}
+		70% {
+			box-shadow: 0 0 0 6px hsla(140, 70%, 45%, 0);
+		}
+		100% {
+			box-shadow: 0 0 0 0 hsla(140, 70%, 45%, 0);
+		}
 	}
 </style>
