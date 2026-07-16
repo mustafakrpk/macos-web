@@ -1,15 +1,32 @@
 /* Mobil iyileştirmeleri — viewport <= 768px */
 @media (max-width: 768px) {
-	/* Pencereler tam ekran */
+	/* Uygulamalar tam ekran (mobilde Dock yok, springboard var) */
+	:global(html),
+	:global(body),
+	:global(#root) {
+		height: 100dvh !important;
+	}
+
 	:global(#windows-area > div) {
 		left: 0 !important;
 		top: 0 !important;
 		transform: none !important;
 		width: 100vw !important;
 		max-width: 100vw !important;
-		height: calc(100vh - 6rem) !important;
-		max-height: calc(100vh - 6rem) !important;
+		height: 100% !important;
+		max-height: 100% !important;
 		border-radius: 0 !important;
+	}
+
+	/* Üst bar: çentikli telefonlarda güvenli alan */
+	:global(header) {
+		padding-top: env(safe-area-inset-top) !important;
+		height: calc(1.8rem + env(safe-area-inset-top)) !important;
+	}
+
+	/* Sürükleme kolu mobilde pasif (parmakla kaydırmayı bozmasın) */
+	:global(.app-window-drag-handle) {
+		touch-action: auto !important;
 	}
 
 	/* Dock'u daha küçük */
