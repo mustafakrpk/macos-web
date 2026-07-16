@@ -2,6 +2,7 @@
 	import Dock from '../Dock/Dock.svelte';
 	import TopBar from '../TopBar/TopBar.svelte';
 	import Wallpaper from '../apps/WallpaperApp/Wallpaper.svelte';
+	import { apps } from '🍎/state/apps.svelte.ts';
 	import { device } from '🍎/state/device.svelte.ts';
 	import { connect_presence } from '🍎/state/presence.svelte.ts';
 	import BootupScreen from './BootupScreen.svelte';
@@ -20,6 +21,11 @@
 
 	// Canlı imleç + presence WebSocket bağlantısını başlat
 	connect_presence();
+
+	// Mobilde açılışta springboard (ana ekran) göster — varsayılan açık uygulamayı kapat
+	if (device.is_mobile) {
+		apps.open['purus-twitter'] = false;
+	}
 
 	if (!isMac) {
 		Promise.all([

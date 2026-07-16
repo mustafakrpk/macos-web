@@ -176,6 +176,24 @@
 		color: var(--system-color-dark);
 	}
 
+	/* Mobil: iki sütunu tek sütuna indir (yatay taşmayı önle) */
+	@media (max-width: 768px) {
+		.container {
+			display: flex;
+			flex-direction: column;
+			overflow-y: auto;
+			background-image: none;
+			background-color: hsla(var(--color), 1);
+		}
+
+		aside {
+			width: 100% !important;
+			height: auto !important;
+			margin: 0 !important;
+			border-radius: 0 !important;
+		}
+	}
+
 	.titlebar {
 		grid-area: 1 / 1 / span 1 / span 2;
 
