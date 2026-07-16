@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { api, parse_string_array, type PublicAbout, type PublicCV, type PublicProject } from '🍎/lib/api.ts';
+	import {
+		api,
+		parse_string_array,
+		type GithubStats,
+		type PublicAbout,
+		type PublicCV,
+		type PublicProject,
+	} from '🍎/lib/api.ts';
 	import { apps } from '🍎/state/apps.svelte.ts';
 
 	type Line = { kind: 'cmd' | 'out' | 'err' | 'info'; text: string };
@@ -15,6 +22,7 @@
 	let about_data = $state<PublicAbout | null>(null);
 	let projects = $state<PublicProject[]>([]);
 	let cv = $state<PublicCV | null>(null);
+	let gh_stats = $state<GithubStats | null>(null);
 
 	const prompt = 'mustafa@portfolyo:~$';
 
@@ -111,6 +119,142 @@
 				return '→ https://github.com/mustafakrpk açıldı';
 			},
 		},
+		gh: {
+			desc: 'Canlı GitHub istatistikleri',
+			run: async () => {
+				if (!gh_stats) {
+					try {
+						const res = await api.get<{ stats: GithubStats }>('/api/public/github/stats');
+						gh_stats = res.stats;
+					} catch {
+						return 'GitHub istatistikleri alınamadı.';
+					}
+				}
+				const s = gh_stats;
+				if (!s) return 'GitHub istatistikleri alınamadı.';
+				const top = s.top_repos
+					.slice(0, 5)
+					.map(
+						(r) =>
+							`  ★ ${String(r.stars).padStart(3)}  ${r.name}${r.language ? ` (${r.language})` : ''}`,
+					)
+					.join('\n');
+				return [
+					`@${s.username}${s.bio ? ` — ${s.bio}` : ''}`,
+					`Repolar: ${s.public_repos}  ·  Takipçi: ${s.followers}  ·  Takip: ${s.following}`,
+					'',
+					'En popüler repolar:',
+					top || '  (yok)',
+				].join('\n');
+			},
+		},
+		ai: {
+			desc: 'AI asistana soru sor (örn: ai deneyimlerin neler?)',
+			run: async (args) => {
+				const q = args.join(' ').trim();
+				if (!q) return 'Kullanım: ai <soru>   (örn: ai hangi teknolojileri biliyorsun?)';
+				try {
+					const res = await api.post<{ reply: string }>('/api/public/chat', {
+						messages: [{ role: 'user', content: q }],
+					});
+					return `🤖 ${res.reply}`;
+				} catch (err: any) {
+					if (err?.status === 503) return 'AI asistan şu an devre dışı.';
+					return 'Asistan yanıt veremedi, biraz sonra dene.';
+				}
+			},
+		},
+		neofetch: {
+			desc: 'Sistem bilgi kartı',
+			run: () => {
+				const art = [
+					'     #####     ',
+					'   #########   ',
+					'  ###########  ',
+					'  ###########  ',
+					'  ###########  ',
+					'   #########   ',
+					'     #   #     ',
+				];
+				const skills_flat =
+					cv?.skill_categories.flatMap((c) => parse_string_array(c.items)) ?? [];
+				const info = [
+					`${about_data?.full_name ?? 'Mustafa Kırpık'}@portfolyo`,
+					'─────────────────────',
+					'OS:       PortfolioOS 13.0',
+					'Host:     macos-web · Svelte 5',
+					'Kernel:   Hono + Drizzle + MySQL',
+					'Shell:    mk-term',
+					`Rol:      ${about_data?.title ?? '—'}`,
+					`Konum:    ${about_data?.location ?? '—'}`,
+					`Projeler: ${projects.length}`,
+					`Yetenek:  ${skills_flat.slice(0, 4).join(', ')}${skills_flat.length > 4 ? '…' : ''}`,
+				];
+				const rows = Math.max(art.length, info.length);
+				const out: string[] = [];
+				for (let i = 0; i < rows; i++) {
+					out.push(`${(art[i] ?? '').padEnd(16)}  ${info[i] ?? ''}`);
+				}
+				return out.join('\n');
+			},
+		},
+		ls: {
+			desc: 'Dosyaları listeler',
+			run: (args) => {
+				if (args[0] === 'projects' || args[0] === 'projeler') {
+					return commands.projects.run([]) as string;
+				}
+				return 'about.txt   cv.txt   projects/   skills/   experience/   contact.txt';
+			},
+		},
+		cat: {
+			desc: 'Dosya içeriğini gösterir (örn: cat about.txt)',
+			run: (args) => {
+				const f = (args[0] ?? '').toLowerCase().replace(/\.txt$/, '');
+				const map: Record<string, string> = {
+					about: 'about',
+					hakkimda: 'about',
+					cv: 'exp',
+					ozgecmis: 'exp',
+					skills: 'skills',
+					yetenekler: 'skills',
+					contact: 'contact',
+					iletisim: 'contact',
+				};
+				const target = map[f];
+				if (!target) return `cat: ${args[0] ?? ''}: böyle bir dosya yok`;
+				return commands[target].run([]) as string;
+			},
+		},
+		sudo: {
+			desc: 'Yönetici komutu çalıştırır 😏',
+			run: (args) => {
+				const sub = args.join(' ').toLowerCase();
+				if (sub === 'hire-me' || sub === 'hire me') {
+					return [
+						'🎉 İşe alım süreci başlatılıyor...',
+						'[####################] 100%',
+						'',
+						'✓ Backend: Laravel, CodeIgniter4, RESTful API, Multi-tenant',
+						'✓ Frontend: React, Next.js, TypeScript, Svelte',
+						'✓ Hızlı öğrenen, üretken, takım oyuncusu',
+						'',
+						'Karar: Mustafa işe alınmalı! 🚀',
+						"→ İletişim için 'contact' yaz.",
+					].join('\n');
+				}
+				if (sub.startsWith('rm -rf')) {
+					return [
+						'rm: "/" siliniyor...',
+						'[##########----------] 50% ... 🫣',
+						'',
+						'Şaka şaka 😄 Hiçbir şey silinmedi — burası bir portfolyo.',
+					].join('\n');
+				}
+				if (!sub) return 'Kullanım: sudo <komut>   (ipucu: sudo hire-me)';
+				return `[sudo] parola: ***\nYetkin yok 😎 ama denemen hoştu: "${sub}"`;
+			},
+		},
 		open: {
 			desc: 'Bir uygulamayı açar (örn: open projects)',
 			run: (args) => {
@@ -201,6 +345,19 @@
 			e.preventDefault();
 			run_command(current);
 			current = '';
+		} else if (e.key === 'Tab') {
+			e.preventDefault();
+			const parts = current.split(/\s+/);
+			if (parts.length === 1 && parts[0]) {
+				const matches = Object.keys(commands).filter((k) =>
+					k.startsWith(parts[0].toLowerCase()),
+				);
+				if (matches.length === 1) {
+					current = `${matches[0]} `;
+				} else if (matches.length > 1) {
+					lines = [...lines, { kind: 'info', text: matches.join('  ') }];
+				}
+			}
 		} else if (e.key === 'ArrowUp') {
 			e.preventDefault();
 			if (history.length === 0) return;
@@ -233,8 +390,9 @@
 		});
 
 		lines = [
-			{ kind: 'info', text: 'Mustafa Kırpık — Portfolyo Terminal' },
-			{ kind: 'info', text: '"help" yaz, komutları gör.' },
+			{ kind: 'info', text: 'Mustafa Kırpık — Portfolyo Terminal  (mk-term)' },
+			{ kind: 'info', text: '"help" ile tüm komutlar · dene: neofetch · gh · ai <soru> · sudo hire-me' },
+			{ kind: 'info', text: 'İpucu: Tab ile tamamla, ↑/↓ ile geçmiş.' },
 			{ kind: 'info', text: '' },
 		];
 
