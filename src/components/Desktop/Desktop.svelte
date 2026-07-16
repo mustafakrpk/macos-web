@@ -2,8 +2,10 @@
 	import Dock from '../Dock/Dock.svelte';
 	import TopBar from '../TopBar/TopBar.svelte';
 	import Wallpaper from '../apps/WallpaperApp/Wallpaper.svelte';
+	import { connect_presence } from '🍎/state/presence.svelte.ts';
 	import BootupScreen from './BootupScreen.svelte';
 	import ContextMenu from './ContextMenu.svelte';
+	import Cursors from './Cursors.svelte';
 	import DesktopIcons from './DesktopIcons.svelte';
 	import DogPet from './DogPet.svelte';
 	import InstallPrompt from './InstallPrompt.svelte';
@@ -13,6 +15,9 @@
 	import WindowsArea from './Window/WindowsArea.svelte';
 
 	const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
+
+	// Canlı imleç + presence WebSocket bağlantısını başlat
+	connect_presence();
 
 	if (!isMac) {
 		Promise.all([
@@ -41,6 +46,7 @@
 	<Spotlight />
 	<KonamiEgg />
 	<DogPet />
+	<Cursors />
 
 	<ContextMenu target_element={mainEl} />
 </div>

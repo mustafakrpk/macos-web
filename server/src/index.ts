@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
+import { createNodeWebSocket } from '@hono/node-ws';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -12,6 +13,7 @@ import {
 	admin_analytics_routes,
 	public_event_routes,
 } from './routes/analytics.js';
+import { presence_ws } from './lib/presence.js';
 import { auth_routes } from './routes/auth.js';
 import { chat_routes } from './routes/chat.js';
 import { github_routes } from './routes/github.js';
@@ -19,6 +21,9 @@ import { public_routes } from './routes/public.js';
 import { upload_routes } from './routes/uploads.js';
 
 const app = new Hono();
+
+// WebSocket (canlı imleç + presence)
+const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
 
 app.use('*', logger());
 
@@ -69,6 +74,9 @@ app.get('/api/ping', (c) =>
 	}),
 );
 
+// Canlı imleç + presence WebSocket kanalı
+app.get('/api/ws', upgradeWebSocket(presence_ws));
+
 app.route('/api/auth', auth_routes);
 app.route('/api/public', public_routes);
 app.route('/api/public', public_event_routes);
@@ -90,7 +98,7 @@ app.onError((err, c) => {
 	);
 });
 
-serve(
+const server = serve(
 	{
 		fetch: app.fetch,
 		port: env.PORT,
@@ -99,3 +107,6 @@ serve(
 		console.log(`✓ Server ready: http://localhost:${info.port}`);
 	},
 );
+
+// WebSocket upgrade'lerini HTTP sunucusuna bağla
+injectWebSocket(server);

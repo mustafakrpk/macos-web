@@ -70,6 +70,7 @@ export default defineConfig({
 			'/api': {
 				target: 'http://localhost:3000',
 				changeOrigin: false,
+				ws: true,
 			},
 			'/uploads': {
 				target: 'http://localhost:3000',
