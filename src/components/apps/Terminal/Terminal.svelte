@@ -176,8 +176,7 @@
 					'   #########   ',
 					'     #   #     ',
 				];
-				const skills_flat =
-					cv?.skill_categories.flatMap((c) => parse_string_array(c.items)) ?? [];
+				const skills_flat = cv?.skill_categories.flatMap((c) => parse_string_array(c.items)) ?? [];
 				const info = [
 					`${about_data?.full_name ?? 'Mustafa Kırpık'}@portfolyo`,
 					'─────────────────────',
@@ -349,9 +348,7 @@
 			e.preventDefault();
 			const parts = current.split(/\s+/);
 			if (parts.length === 1 && parts[0]) {
-				const matches = Object.keys(commands).filter((k) =>
-					k.startsWith(parts[0].toLowerCase()),
-				);
+				const matches = Object.keys(commands).filter((k) => k.startsWith(parts[0].toLowerCase()));
 				if (matches.length === 1) {
 					current = `${matches[0]} `;
 				} else if (matches.length > 1) {
@@ -391,7 +388,10 @@
 
 		lines = [
 			{ kind: 'info', text: 'Mustafa Kırpık — Portfolyo Terminal  (mk-term)' },
-			{ kind: 'info', text: '"help" ile tüm komutlar · dene: neofetch · gh · ai <soru> · sudo hire-me' },
+			{
+				kind: 'info',
+				text: '"help" ile tüm komutlar · dene: neofetch · gh · ai <soru> · sudo hire-me',
+			},
 			{ kind: 'info', text: 'İpucu: Tab ile tamamla, ↑/↓ ile geçmiş.' },
 			{ kind: 'info', text: '' },
 		];
@@ -404,7 +404,7 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
 <section class="container" onclick={focus_input}>
 	<header class="titlebar app-window-drag-handle">
 		<span>Terminal — mustafa@portfolyo</span>
@@ -452,8 +452,7 @@
 		background: linear-gradient(180deg, #2a2a2c, #1d1d1f);
 		color: hsla(0, 0%, 100%, 0.7);
 		font-size: 0.78rem;
-		font-family:
-			-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		user-select: none;
 		flex-shrink: 0;
 	}
