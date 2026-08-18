@@ -1,6 +1,8 @@
 # Yol Haritası — Sonraki Özellikler
 
-> **Hedef:** Backend + admin paneli temel kuruldu. Şimdi siteyi "ziyaretçi etkilenip ayrılmıyor" seviyesine taşıyacak özellikler.
+> **Durum (18 Ağustos 2026):** Faz A, B ve C'nin neredeyse tamamı tamamlandı.
+> Kalan iki boşluk aşağıda işaretli. Bu dosya koda karşı doğrulanarak güncellendi —
+> kutular gerçeği yansıtır.
 > **Strateji:** Hızlı kazanımlardan başla → konsept güçlendiriciler → büyük altyapı.
 
 ---
@@ -124,31 +126,42 @@
 
 ---
 
-## ✅ Tamamlama sırası (bugünden itibaren)
+## ✅ Durum — koda karşı doğrulandı
 
-### Bugün
-- [x] ROADMAP.md
-- [ ] **A1** Boot ses + welcome
-- [ ] **A2** OG meta + favicon
-- [ ] **A3** PWA install prompt
-- [ ] **A4** E-posta bildirimi
+### Tamamlandı
 
-### Yarın
-- [ ] **B1** Spotlight (⌘K)
-- [ ] **B2** Terminal app
-- [ ] **A5** Current status banner
+- [x] **A1** Boot ekranı (`BootupScreen.svelte`) — *sesi hariç, aşağıya bak*
+- [x] **A3** PWA install prompt (`beforeinstallprompt`)
+- [x] **A4** E-posta bildirimi (`server/src/lib/mailer.ts`)
+- [x] **B1** Spotlight (⌘K)
+- [x] **B2** Terminal — neofetch, gh, ai, sudo easter egg, Tab tamamlama
+- [x] **B3** Notes / Blog app
+- [x] **B5** Easter egg
+- [x] **C1** Admin analytics (`server/src/routes/analytics.ts`)
+- [x] **C2** i18n TR + EN (`src/configs/i18n/`)
+- [x] **C3** GitHub stats (`server/src/routes/github.ts`)
+- [x] **C4** Mobil mod — iOS benzeri springboard + tam ekran uygulamalar
+- [x] **C5** Self-hosted analytics rehberi (`deploy/analytics.md`)
 
-### Sonraki günler
-- [ ] **B3** Notes / Blog app
-- [ ] **C1** Admin analytics
-- [ ] **C3** GitHub stats widget
-- [ ] **B4** Photos (opsiyonel)
-- [ ] **B5** Easter egg
-- [ ] **C2** i18n TR + EN
-- [ ] **C4** Mobil mod
-- [ ] **C5** Self-hosted analytics
+### ROADMAP'te yoktu, sonradan eklendi
 
----
+- [x] **AskMe** — Gemini ile grounded AI asistan
+- [x] **Canlı imleçler + presence** (WebSocket)
+- [x] **VSCode** app — canlı kod editörü
+- [x] **AppStore** app
+- [x] **CV import** + PDF indirme
+- [x] **GitHub projeleri import** script'i
+- [x] Test altyapısı + CI (GitHub Actions)
+
+### Kalan
+
+- [ ] **A1 açılış sesi** — `public/` altında hiç ses dosyası yok, kodda `Audio()`
+      çağrısı da yok. Telifli Apple sesi kullanılamaz; ses dosyası dışarıdan sağlanmalı.
+      Ayrıca tarayıcı autoplay politikası için kullanıcı etkileşimi fallback'i gerekir.
+- [ ] **A2 OG cover** — `public/cover-image.png` mevcut; Mustafa'nın kendi görseliyle
+      değiştirilip değiştirilmediği doğrulanmadı.
+- [ ] **A5 "Şu an üzerinde çalıştığım" banner + admin `current_status` alanı**
+- [ ] **B4 Photos / Galeri** — opsiyonel; paylaşılacak görsel yoksa atlanabilir
 
 ## 🛑 Atlanan / Düşürülen (en azından şimdilik)
 
@@ -161,5 +174,5 @@
 ## 📁 Plan dosyaları
 
 - [PLAN.md](PLAN.md) — Backend ve admin paneli (tamamlandı)
-- **[ROADMAP.md](ROADMAP.md)** — Yeni özellikler (bu dosya)
+- **[ROADMAP.md](ROADMAP.md)** — Yeni özellikler (bu dosya, 18 Ağustos 2026'da koda karşı doğrulandı)
 - [deploy/README.md](deploy/README.md) — Sunucu kurulumu
