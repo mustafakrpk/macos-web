@@ -90,6 +90,10 @@ verir. Uyarı sayısı artıyorsa senin değişikliğindendir.
 
 ## Mimari
 
+Derin mimari soruları (istek yolu, katman sınırları, "neden böyle yapılmış",
+yeni uç/uygulama ekleme şablonu) için önce **`docs/ARCHITECTURE.md`** dosyasını oku.
+Buraya içe aktarılmadı; her oturumda taşınmasın diye ihtiyaç anında okunur.
+
 ### Frontend
 
 | Katman | Yer | Kural |
