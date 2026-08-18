@@ -73,8 +73,14 @@ CI (`.github/workflows/ci.yml`, Node 20 + pnpm 10.12.3) iki işi paralel koşar:
 
 Push'tan önce aynısını yerelde koştur: `/hazir-mi`.
 
-Bilinen temel durum: `pnpm check` **0 hata, 3 uyarı** (kullanılmayan CSS seçicileri)
-verir. Uyarı sayısı artıyorsa senin değişikliğindendir.
+Bilinen temel durum: `pnpm check` **0 hata, 1 uyarı** verir — `About.svelte`
+içindeki kullanılmayan `p strong` seçicisi. Uyarı sayısı artıyorsa senin
+değişikliğindendir.
+
+> `svelte-ignore` yazarken kodları **virgülle** ayır:
+> `<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->`
+> Runes modunda virgülden sonrası yoksa döngü kırılır ve **yalnızca ilk kod** uygulanır;
+> kalanı "prose" sayılıp sessizce atılır. Boşlukla ayırmak hata vermez, sadece çalışmaz.
 
 ## Kod stili — varsayılandan sapanlar
 

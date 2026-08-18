@@ -36,8 +36,9 @@ server test: N geçti · server build: OK
 
 ## Değerlendirme
 
-- **Bilinen temel durum:** `pnpm check` 0 hata ve 3 uyarı verir (kullanılmayan CSS
-  seçicileri). Uyarı sayısı 3'ten fazlaysa, fazlası bu değişiklikten gelmiştir — söyle.
+- **Bilinen temel durum:** `pnpm check` 0 hata ve 1 uyarı verir (`About.svelte`
+  içindeki kullanılmayan `p strong` seçicisi). Uyarı sayısı 1'den fazlaysa,
+  fazlası bu değişiklikten gelmiştir — söyle.
 - Herhangi bir adım kırmızıysa **dur**, kalan adımları koşturma, neyin kırıldığını
   ve hangi dosyadan geldiğini bildir.
 - Testi veya kontrolü geçirmek için testi/yapılandırmayı gevşetme.
