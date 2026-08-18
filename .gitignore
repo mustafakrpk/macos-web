@@ -3,3 +3,5 @@
 /.vscode/
 .DS_Store
 .idea/
+# Claude Code — kişisel izinler, paylaşılmaz
+.claude/settings.local.json

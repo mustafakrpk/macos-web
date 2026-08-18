@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(pnpm dev)",
+      "Bash(pnpm build)",
+      "Bash(pnpm serve)",
+      "Bash(pnpm check)",
+      "Bash(pnpm test)",
+      "Bash(pnpm test:watch)",
+      "Bash(npx pnpm@10.12.3 check)",
+      "Bash(npx pnpm@10.12.3 test)",
+      "Bash(npx pnpm@10.12.3 build)",
+      "Bash(pnpm install --frozen-lockfile)",
+      "Bash(pnpm install --ignore-workspace)",
+      "Bash(pnpm db:generate)",
+      "Bash(pnpm db:studio)",
+      "Bash(npx prettier:*)"
+    ],
+    "ask": [
+      "Bash(pnpm add:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm db:migrate)",
+      "Bash(pnpm db:seed)",
+      "Bash(pnpm db:import-github)",
+      "Bash(pnpm db:import-cv)"
+    ],
+    "deny": [
+      "Read(./server/.env)",
+      "Read(./server/uploads/**)",
+      "Edit(./dist/**)",
+      "Edit(./server/src/db/migrations/**)",
+      "Edit(./pnpm-lock.yaml)",
+      "Edit(./server/pnpm-lock.yaml)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": ".claude/hooks/format.sh" }
+        ]
+      }
+    ]
+  }
+}
