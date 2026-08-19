@@ -5,3 +5,6 @@
 .idea/
 # Claude Code — kişisel izinler, paylaşılmaz
 .claude/settings.local.json
+
+# Claude Code — hook teşhis kaydı
+.claude/gate.log
