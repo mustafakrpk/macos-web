@@ -12,6 +12,10 @@ set -uo pipefail
 
 input=$(cat)
 
+# Teşhis kaydı: hook'un Claude Code tarafından gerçekten çağrıldığını doğrular.
+# .claude/gate.log gitignore'ludur. Kaldırmak zararsızdır.
+printf '%s tetiklendi\n' "$(date -Is)" >> "$(dirname "${BASH_SOURCE[0]}")/../gate.log" 2>/dev/null
+
 printf '%s' "$input" | grep -q '"stop_hook_active"[[:space:]]*:[[:space:]]*true' && exit 0
 
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
